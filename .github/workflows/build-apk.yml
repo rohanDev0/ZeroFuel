@@ -1,146 +1,46 @@
-name: "▒▒▒▒▒▒▒▒"
-run-name: "▒▒▒▒"
+name: Build Test APK
 
 on:
-  push:
-    branches: [main, master]
-    tags: ['v*']
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: build-apk-${{ github.ref }}
-  cancel-in-progress: true
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    env:
-      CCACHE_DIR: /home/runner/.ccache
-      CCACHE_MAXSIZE: 1G
-      CCACHE_COMPRESS: "1"
-      CCACHE_COMPILERCHECK: content
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      - name: Setup JDK 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Install ccache
+      - name: Install Android dependencies
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq --no-install-recommends ccache
-          ccache --version | head -n1
-
-      - name: Cache ccache (native build)
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/.ccache
-          key: ccache-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: |
-            ccache-${{ runner.os }}-
-
-      - name: Cache Android CMake & NDK
-        uses: actions/cache@v4
-        with:
-          path: |
-            /usr/local/lib/android/sdk/cmake/3.22.1
-            /usr/local/lib/android/sdk/ndk/27.0.12077973
-          key: android-sdk-cmake3.22.1-ndk27.0.12077973
-
-      - name: Install CMake & NDK
-        run: |
-          SDKM="${ANDROID_HOME:-/usr/local/lib/android/sdk}/cmdline-tools/latest/bin/sdkmanager"
-          yes | "$SDKM" --licenses > /dev/null || true
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses || true
           "$SDKM" "cmake;3.22.1" "ndk;27.0.12077973"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Siapkan keystore
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
-            STORE_PASS="$KEYSTORE_PASSWORD"
-            ALIAS="$KEY_ALIAS"
-            KEY_PASS="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
-          else
-            echo "::error::Secret KEYSTORE_BASE64 belum diisi. Build dihentikan agar APK tidak ditandatangani key acak (tidak bisa meng-update versi sebelumnya)."
-            exit 1
-          fi
-          printf 'storeFile=keystore.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' \
-            "$STORE_PASS" "$ALIAS" "$KEY_PASS" > keystore.properties
-
-      - name: Build release APK
-        env:
-          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
-          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
+      - name: Build Debug APK
         run: |
           chmod +x gradlew
-          # Ulangi sampai 3 kali: unduhan dependensi native (libusb) kadang gagal sementara.
-          n=0
-          until ./gradlew :app:assembleProdRelease --parallel --build-cache --stacktrace \
-            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"; do
-            n=$((n + 1))
-            if [ "$n" -ge 3 ]; then
-              echo "::error::Build gagal setelah $n percobaan."
-              exit 1
-            fi
-            echo "::warning::Build gagal, mengulang ($n/3) dalam 20 detik..."
-            sleep 20
-          done
+          ./gradlew :app:assembleDevDebug --stacktrace
 
-      - name: ccache stats
-        if: always()
-        run: ccache -s || true
-
-      - name: Rename APK
-        run: |
-          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-            VER="$GITHUB_REF_NAME"
-          else
-            VER="build-$GITHUB_RUN_NUMBER"
-          fi
-          mkdir -p dist
-          cp app/build/outputs/apk/prod/release/*.apk "dist/Zenith-${VER}.apk"
-          ls -lh dist
-
-      - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          files: dist/*.apk
-          body_path: RELEASE_NOTES.md
-
-      - name: Pack 7b1d
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        run: |
-          for f in dist/*.apk; do
-            zip -9 -j "${f%.apk}.zip" "$f"
-          done
-          ls -lh dist
-
-      - name: Sync 4f9c2e
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        uses: softprops/action-gh-release@v2
-        with:
-          draft: true
-          tag_name: dev-${{ github.run_number }}
-          target_commitish: ${{ github.sha }}
-          name: Dev build ${{ github.run_number }}
-          body: Dev build (owner only).
-          files: dist/*.zip
+          name: ZeroFuel-Test-APK
+          path: app/build/outputs/apk/dev/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7
