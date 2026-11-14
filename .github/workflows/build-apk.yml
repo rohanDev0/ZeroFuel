@@ -45,6 +45,13 @@ jobs:
             echo "keyPassword=$KEY_PASSWORD"
           } > keystore.properties
 
+        - name: Validate release keystore
+        env:
+          STORE_PASSWORD: ${{ secrets.ZERO_FUEL_STORE_PASSWORD }}
+        run: |
+          echo "Checking reconstructed keystore..."
+          keytool -list -keystore zerofuel-release.jks -storepass "$STORE_PASSWORD"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
