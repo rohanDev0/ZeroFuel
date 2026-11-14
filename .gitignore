@@ -50,3 +50,7 @@ AGENTS.md
 
 # Claude Code session files (launch configs, worktrees)
 .claude/
+
+# ZeroFuel release signing key
+*.jks
+*.keystore
