@@ -48,4 +48,119 @@ jobs:
 
       - name: Cache Android SDK
         uses: actions/cache@v4
-       
+        with:
+          path: |
+            /usr/local/lib/android/sdk/cmake/3.22.1
+            /usr/local/lib/android/sdk/ndk/27.0.12077973
+          key: android-sdk-cmake3.22.1-ndk27.0.12077973
+
+      - name: Install Android dependencies
+        run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses || true
+          "$SDKM" "cmake;3.22.1" "ndk;27.0.12077973"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Prepare release keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ZERO_FUEL_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ZERO_FUEL_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ZERO_FUEL_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ZERO_FUEL_KEY_PASSWORD }}
+        run: |
+          set -e
+
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::Missing keystore secret"
+            exit 1
+          fi
+
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > zerofuel-release.jks
+
+          chmod 600 zerofuel-release.jks
+
+          echo "Checking keystore format..."
+
+          keytool -list \
+            -keystore zerofuel-release.jks \
+            -storepass "$STORE_PASSWORD"
+
+          echo "Creating signing configuration..."
+
+          python3 - <<'PY'
+          import os
+
+          values = {
+              "storeFile": "zerofuel-release.jks",
+              "storePassword": os.environ["STORE_PASSWORD"],
+              "keyAlias": os.environ["KEY_ALIAS"],
+              "keyPassword": os.environ["KEY_PASSWORD"],
+          }
+
+          def escape(value):
+              return (value.replace("\\", "\\\\")
+                           .replace(":", "\\:")
+                           .replace("=", "\\=")
+                           .replace("#", "\\#")
+                           .replace("!", "\\!")
+                           .replace(" ", "\\ "))
+
+          with open("keystore.properties", "w") as f:
+              for key, value in values.items():
+                  f.write(f"{key}={escape(value)}\n")
+          PY
+
+      - name: Validate release signing
+        env:
+          STORE_PASSWORD: ${{ secrets.ZERO_FUEL_STORE_PASSWORD }}
+        run: |
+          keytool -list \
+            -keystore zerofuel-release.jks \
+            -storepass "$STORE_PASSWORD" \
+            -alias zerofuel
+
+      - name: Build ZeroFuel Production APK
+        run: |
+          chmod +x gradlew
+
+          n=0
+
+          until ./gradlew :app:assembleProdRelease \
+            --parallel \
+            --build-cache \
+            --stacktrace \
+            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
+          do
+            n=$((n + 1))
+
+            if [ "$n" -ge 3 ]; then
+              echo "::error::Production build failed after 3 attempts"
+              exit 1
+            fi
+
+            echo "::warning::Build failed. Retrying in 20 seconds..."
+            sleep 20
+          done
+
+      - name: Rename APK
+        run: |
+          mkdir -p dist
+
+          cp app/build/outputs/apk/prod/release/*.apk \
+            "dist/ZeroFuel-1.0.0.apk"
+
+          ls -lh dist/
+
+      - name: Upload ZeroFuel Production APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeroFuel-Production-APK
+          path: dist/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Ccache statistics
+        if: always()
+        run: ccache -s || true
