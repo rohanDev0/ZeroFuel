@@ -8,10 +8,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: zerofuel-production-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-prod-release:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - name: Checkout Repository
@@ -32,18 +36,41 @@ jobs:
           yes | "$SDKM" --licenses || true
           "$SDKM" "cmake;3.22.1" "ndk;27.0.12077973"
 
-      - name: Setup local.properties
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Configure Local Properties
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
           LISTEN_TOGETHER_SERVER: ${{ secrets.LISTEN_TOGETHER_SERVER }}
         run: |
-          touch local.properties
-          {
-            echo "LASTFM_API_KEY=$LASTFM_API_KEY"
-            echo "LASTFM_SECRET=$LASTFM_SECRET"
-            echo "LISTEN_TOGETHER_SERVER=$LISTEN_TOGETHER_SERVER"
-          } > local.properties
+          python3 - <<'PY'
+          import os
+
+          def escape(value):
+              result = ""
+              for i, char in enumerate(value):
+                  if char in "\\:=#!":
+                      result += "\\"
+                  elif char == " " and i == 0:
+                      result += "\\"
+                  elif char == "\n":
+                      result += "\\n"
+                      continue
+                  result += char
+              return result
+
+          keys = [
+              "LASTFM_API_KEY",
+              "LASTFM_SECRET",
+              "LISTEN_TOGETHER_SERVER"
+          ]
+
+          with open("local.properties", "w") as f:
+              for key in keys:
+                  f.write(f"{key}={escape(os.environ.get(key, ''))}\n")
+          PY
 
       - name: Prepare Release Keystore
         env:
@@ -51,45 +78,79 @@ jobs:
           STORE_PASSWORD: ${{ secrets.ZERO_FUEL_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ZERO_FUEL_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ZERO_FUEL_KEY_PASSWORD }}
+          EXPECTED_HASH: ${{ secrets.ZERO_FUEL_KEYSTORE_SHA256 }}
         run: |
           set -e
 
           if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "::error::ZERO_FUEL_KEYSTORE_BASE64 is missing"
+            echo "::error::Missing ZERO_FUEL_KEYSTORE_BASE64"
+            exit 1
+          fi
+
+          if [ -z "$EXPECTED_HASH" ]; then
+            echo "::error::Missing ZERO_FUEL_KEYSTORE_SHA256"
             exit 1
           fi
 
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > zerofuel-release.jks
           chmod 600 zerofuel-release.jks
 
-          if [ ! -s zerofuel-release.jks ]; then
-            echo "::error::Decoded keystore is empty"
+          echo "Checking keystore integrity..."
+
+          ACTUAL_HASH=$(sha256sum zerofuel-release.jks | awk '{print $1}')
+
+          if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]; then
+            echo "::error::Keystore fingerprint mismatch."
             exit 1
           fi
 
-          echo "Checking reconstructed keystore..."
+          echo "SUCCESS: Keystore matches the original file."
+
+          echo "Validating keystore..."
 
           keytool -list \
+            -storetype PKCS12 \
             -keystore zerofuel-release.jks \
             -storepass "$STORE_PASSWORD" \
             -alias "$KEY_ALIAS"
 
-          {
-            echo "storeFile=zerofuel-release.jks"
-            echo "storePassword=$STORE_PASSWORD"
-            echo "keyAlias=$KEY_ALIAS"
-            echo "keyPassword=$KEY_PASSWORD"
-          } > keystore.properties
+          python3 - <<'PY'
+          import os
 
-      - name: Grant Execute Permission
-        run: chmod +x gradlew
+          def escape(value):
+              result = ""
+              for i, char in enumerate(value):
+                  if char in "\\:=#!":
+                      result += "\\"
+                  elif char == " " and i == 0:
+                      result += "\\"
+                  elif char == "\n":
+                      result += "\\n"
+                      continue
+                  result += char
+              return result
+
+          values = {
+              "storeFile": "zerofuel-release.jks",
+              "storePassword": os.environ["STORE_PASSWORD"],
+              "keyAlias": os.environ["KEY_ALIAS"],
+              "keyPassword": os.environ["KEY_PASSWORD"],
+          }
+
+          with open("keystore.properties", "w") as f:
+              for key, value in values.items():
+                  f.write(f"{key}={escape(value)}\n")
+          PY
 
       - name: Build Signed Production APK
         run: |
+          chmod +x gradlew
+
           ./gradlew :app:assembleProdRelease \
             --parallel \
             --build-cache \
-            --stacktrace
+            --stacktrace \
+            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
 
       - name: Upload Production APK
         uses: actions/upload-artifact@v4
