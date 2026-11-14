@@ -1,146 +1,52 @@
-name: "prod"
-run-name: "g"
+name: Android Release APK
 
 on:
   push:
-    branches: [main, master]
-    tags: ['v*']
+    branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
-concurrency:
-  group: build-apk-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build:
+  build-prod-release:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      CCACHE_DIR: /home/runner/.ccache
-      CCACHE_MAXSIZE: 1G
-      CCACHE_COMPRESS: "1"
-      CCACHE_COMPILERCHECK: content
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
 
-      - name: Install ccache
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq --no-install-recommends ccache
-          ccache --version | head -n1
+    - name: Setup Secrets (Keystore & local.properties)
+      run: |
+        echo "LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }}" > local.properties
+        echo "LASTFM_SECRET=${{ secrets.LASTFM_SECRET }}" >> local.properties
+        echo "LISTEN_TOGETHER_SERVER=${{ secrets.LISTEN_TOGETHER_SERVER }}" >> local.properties
 
-      - name: Cache ccache (native build)
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/.ccache
-          key: ccache-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: |
-            ccache-${{ runner.os }}-
+        echo "${{ secrets.STORE_BASE64 }}" | base64 -d > zerofuel-release.jks
+        {
+          echo "storeFile=zerofuel-release.jks"
+          echo "storePassword=${{ secrets.ZERO_FUEL_STORE_PASSWORD }}"
+          echo "keyAlias=${{ secrets.ZERO_FUEL_KEY_ALIAS }}"
+          echo "keyPassword=${{ secrets.ZERO_FUEL_KEY_PASSWORD }}"
+        } > keystore.properties
 
-      - name: Cache Android CMake & NDK
-        uses: actions/cache@v4
-        with:
-          path: |
-            /usr/local/lib/android/sdk/cmake/3.22.1
-            /usr/local/lib/android/sdk/ndk/27.0.12077973
-          key: android-sdk-cmake3.22.1-ndk27.0.12077973
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
-      - name: Install CMake & NDK
-        run: |
-          SDKM="${ANDROID_HOME:-/usr/local/lib/android/sdk}/cmdline-tools/latest/bin/sdkmanager"
-          yes | "$SDKM" --licenses > /dev/null || true
-          "$SDKM" "cmake;3.22.1" "ndk;27.0.12077973"
+    - name: Build Signed Prod Release APK
+      run: ./gradlew assembleProdRelease
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bitchord-prod-release-signed
+        path: app/build/outputs/apk/prod/release/*.apk
 
-      - name: Siapkan keystore
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
-            STORE_PASS="$KEYSTORE_PASSWORD"
-            ALIAS="$KEY_ALIAS"
-            KEY_PASS="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
-          else
-            echo "::error::Secret KEYSTORE_BASE64 belum diisi. Build dihentikan agar APK tidak ditandatangani key acak (tidak bisa meng-update versi sebelumnya)."
-            exit 1
-          fi
-          printf 'storeFile=keystore.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' \
-            "$STORE_PASS" "$ALIAS" "$KEY_PASS" > keystore.properties
-
-      - name: Build release APK
-        env:
-          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
-          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
-        run: |
-          chmod +x gradlew
-          # Ulangi sampai 3 kali: unduhan dependensi native (libusb) kadang gagal sementara.
-          n=0
-          until ./gradlew :app:assembleProdRelease --parallel --build-cache --stacktrace \
-            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"; do
-            n=$((n + 1))
-            if [ "$n" -ge 3 ]; then
-              echo "::error::Build gagal setelah $n percobaan."
-              exit 1
-            fi
-            echo "::warning::Build gagal, mengulang ($n/3) dalam 20 detik..."
-            sleep 20
-          done
-
-      - name: ccache stats
-        if: always()
-        run: ccache -s || true
-
-      - name: Rename APK
-        run: |
-          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-            VER="$GITHUB_REF_NAME"
-          else
-            VER="build-$GITHUB_RUN_NUMBER"
-          fi
-          mkdir -p dist
-          cp app/build/outputs/apk/prod/release/*.apk "dist/Zenith-${VER}.apk"
-          ls -lh dist
-
-      - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*.apk
-          body_path: RELEASE_NOTES.md
-
-      - name: Pack 7b1d
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        run: |
-          for f in dist/*.apk; do
-            zip -9 -j "${f%.apk}.zip" "$f"
-          done
-          ls -lh dist
-
-      - name: Sync 4f9c2e
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        uses: softprops/action-gh-release@v2
-        with:
-          draft: true
-          tag_name: dev-${{ github.run_number }}
-          target_commitish: ${{ github.sha }}
-          name: Dev build ${{ github.run_number }}
-          body: Dev build (owner only).
-          files: dist/*.zip
+    # Built by the same assembleProdRelease, with the same key. The watch app
+    # only pairs with a phone app signed by the same key, so a prod watch APK
+    # for these phone builds can only come from here, never a local build.
+    
