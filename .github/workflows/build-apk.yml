@@ -6,10 +6,20 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: zerofuel-production-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+
+    env:
+      CCACHE_DIR: /home/runner/.ccache
+      CCACHE_MAXSIZE: 1G
+      CCACHE_COMPRESS: "1"
+      CCACHE_COMPILERCHECK: content
 
     steps:
       - name: Checkout
@@ -23,47 +33,19 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install Android dependencies
+      - name: Install ccache
         run: |
-          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
-          yes | "$SDKM" --licenses || true
-          "$SDKM" "cmake;3.22.1" "ndk;27.0.12077973"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ccache
 
-      - name: Configure release signing
-        env:
-          KEYSTORE_BASE64: ${{ secrets.ZERO_FUEL_KEYSTORE_BASE64 }}
-          STORE_PASSWORD: ${{ secrets.ZERO_FUEL_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ZERO_FUEL_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ZERO_FUEL_KEY_PASSWORD }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > zerofuel-release.jks
-          chmod 600 zerofuel-release.jks
-          {
-            echo "storeFile=zerofuel-release.jks"
-            echo "storePassword=$STORE_PASSWORD"
-            echo "keyAlias=$KEY_ALIAS"
-            echo "keyPassword=$KEY_PASSWORD"
-          } > keystore.properties
-
-        - name: Validate release keystore
-        env:
-          STORE_PASSWORD: ${{ secrets.ZERO_FUEL_STORE_PASSWORD }}
-        run: |
-          echo "Checking reconstructed keystore..."
-          keytool -list -keystore zerofuel-release.jks -storepass "$STORE_PASSWORD"
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build Production APK
-        run: |
-          chmod +x gradlew
-          ./gradlew :app:assembleProdRelease --stacktrace
-
-      - name: Upload Production APK
-        uses: actions/upload-artifact@v4
+      - name: Cache ccache
+        uses: actions/cache@v4
         with:
-          name: ZeroFuel-Production-APK
-          path: app/build/outputs/apk/prod/release/*.apk
-          if-no-files-found: error
-          retention-days: 30
+          path: /home/runner/.ccache
+          key: ccache-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
+
+      - name: Cache Android SDK
+        uses: actions/cache@v4
+       
