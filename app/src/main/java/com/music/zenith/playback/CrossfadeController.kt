@@ -1475,7 +1475,7 @@ class CrossfadeController(
         return if (seconds > 0) seconds * 1000L else 0L
     }
 
-    /** Zenith doesn't carry album metadata on [MediaMetadata] yet, so [TransitionTrackInfo.album] stays blank. */
+    /** ZeroFuel doesn't carry album metadata on [MediaMetadata] yet, so [TransitionTrackInfo.album] stays blank. */
     private fun MediaItem.toTransitionInfo(durationMs: Long) = TransitionTrackInfo(
         id = mediaId,
         durationMs = durationMs,
@@ -3697,7 +3697,7 @@ class CrossfadeController(
 
     // ---- Phase log ----------------------------------------------------------
     // Hanya mengukur, tidak mengoreksi: seberapa jauh dua beat sebenarnya bergeser di
-    // lagu nyata, di awal, tengah, dan akhir overlap. Filter Logcat: ZenithCrossfade.
+    // lagu nyata, di awal, tengah, dan akhir overlap. Filter Logcat: ZeroFuelCrossfade.
 
     private val phaseLogSamples = DoubleArray(PHASE_LOG_SAMPLES)
     private var phaseLogCount = 0
@@ -4000,7 +4000,7 @@ class CrossfadeController(
         /** Points the mix popup's fader lines are sampled at. */
         const val MIX_VIEW_FADER_POINTS = 64
 
-        const val TAG = "ZenithCrossfade"
+        const val TAG = "ZeroFuelCrossfade"
 
         /**
          * Used only before a pair has been analysed, or when the evidence is

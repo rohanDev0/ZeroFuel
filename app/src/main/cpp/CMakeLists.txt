@@ -13,7 +13,7 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(zenith_analysis LANGUAGES C CXX)
 
-get_filename_component(ZENITH_NATIVE_DIR
+get_filename_component(ZEROFUEL_NATIVE_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../native"
     ABSOLUTE)
 
@@ -21,11 +21,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(zenith_analysis SHARED
-    ${ZENITH_NATIVE_DIR}/analyzer/audio_analysis.cpp
-    ${ZENITH_NATIVE_DIR}/analyzer/tempo_analysis.cpp
-    ${ZENITH_NATIVE_DIR}/analyzer/resampler.cpp
-    ${ZENITH_NATIVE_DIR}/analyzer/mel_spectrogram.cpp
-    ${ZENITH_NATIVE_DIR}/analyzer/vocal_spectrogram.cpp
+    ${ZEROFUEL_NATIVE_DIR}/analyzer/audio_analysis.cpp
+    ${ZEROFUEL_NATIVE_DIR}/analyzer/tempo_analysis.cpp
+    ${ZEROFUEL_NATIVE_DIR}/analyzer/resampler.cpp
+    ${ZEROFUEL_NATIVE_DIR}/analyzer/mel_spectrogram.cpp
+    ${ZEROFUEL_NATIVE_DIR}/analyzer/vocal_spectrogram.cpp
     jni/analysis_jni.cpp
     jni/mel_jni.cpp
     jni/vocal_jni.cpp
@@ -33,7 +33,7 @@ add_library(zenith_analysis SHARED
 
 target_include_directories(zenith_analysis PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${ZENITH_NATIVE_DIR}
+    ${ZEROFUEL_NATIVE_DIR}
 )
 
 # -ffast-math is deliberately NOT enabled: the analyzer's log/mel-adjacent
@@ -54,12 +54,12 @@ target_link_options(zenith_analysis PRIVATE "-Wl,-z,max-page-size=16384")
 # under native/third_party. Fast-math is safe here (nothing in it depends on
 # exact IEEE behaviour) and lets the STFT's complex arithmetic vectorise.
 add_library(zenith_loopmix SHARED
-    ${ZENITH_NATIVE_DIR}/loopmix/loop_mix_renderer.cpp
+    ${ZEROFUEL_NATIVE_DIR}/loopmix/loop_mix_renderer.cpp
     jni/loopmix_jni.cpp
 )
 target_include_directories(zenith_loopmix PRIVATE
-    ${ZENITH_NATIVE_DIR}
-    ${ZENITH_NATIVE_DIR}/third_party
+    ${ZEROFUEL_NATIVE_DIR}
+    ${ZEROFUEL_NATIVE_DIR}/third_party
 )
 target_compile_options(zenith_loopmix PRIVATE -O3 -ffast-math -fvisibility=hidden -Wno-unused-parameter)
 target_link_options(zenith_loopmix PRIVATE "-Wl,-z,max-page-size=16384")

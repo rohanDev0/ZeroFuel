@@ -12,17 +12,17 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 /**
- * The share glyph every share button draws. [ZenithIcons.Share] by default; the
+ * The share glyph every share button draws. [ZeroFuelIcons.Share] by default; the
  * app provides its SF Symbol one, so screens in this module and the app's own
  * screens show the same Apple Music style glyph.
  */
-val LocalShareIcon = staticCompositionLocalOf { ZenithIcons.Share }
+val LocalShareIcon = staticCompositionLocalOf { ZeroFuelIcons.Share }
 
 /**
- * The close glyph for floating action bars. [ZenithIcons.Close] by default; the
+ * The close glyph for floating action bars. [ZeroFuelIcons.Close] by default; the
  * app provides its SF Symbol one so the bars match the rest of its icons.
  */
-val LocalCloseIcon = staticCompositionLocalOf { ZenithIcons.Close }
+val LocalCloseIcon = staticCompositionLocalOf { ZeroFuelIcons.Close }
 
 /**
  * Thick-stroke, round-capped icons in the spirit of Telegram's modern icon set.
@@ -31,7 +31,7 @@ val LocalCloseIcon = staticCompositionLocalOf { ZenithIcons.Close }
  *
  * [Home] is the exception and says why it is one.
  */
-object ZenithIcons {
+object ZeroFuelIcons {
 
     private const val STROKE = 2.2f
     private val stroke = SolidColor(Color.Black)

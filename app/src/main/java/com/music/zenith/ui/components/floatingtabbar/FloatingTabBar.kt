@@ -20,7 +20,7 @@
  *   animation morphs around the center instead of the start edge.
  *
  * Taken from EchoMusicApp/Echo-Music, which carries the three modifications
- * listed above; Zenith's own use of it is in
+ * listed above; ZeroFuel's own use of it is in
  * [com.music.zenith.ui.components.GlassNavBar]. One further change here:
  *
  * - `tabBarContentModifier` is a `@Composable () -> Modifier` factory rather

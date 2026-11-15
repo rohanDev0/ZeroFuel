@@ -2,17 +2,17 @@
 
 <br/>
 
-<a href="https://github.com/rezapranata089-bit/Zenith/releases/latest"><img src=".github/assets/banner.svg" alt="Zenith – A YouTube Music player for Android with an Apple Music–style interface" width="100%" /></a>
+<a href="https://github.com/rezapranata089-bit/ZeroFuel/releases/latest"><img src=".github/assets/banner.svg" alt="ZeroFuel – A YouTube Music player for Android with an Apple Music–style interface" width="100%" /></a>
 
 <p>
-<a href="https://github.com/rezapranata089-bit/Zenith/releases/latest"><img src="https://img.shields.io/github/v/release/rezapranata089-bit/Zenith?style=flat-square&amp;labelColor=0d1117&amp;color=ff4d6d" alt="Latest release" /></a>
-<a href="https://github.com/rezapranata089-bit/Zenith/releases"><img src="https://img.shields.io/github/downloads/rezapranata089-bit/Zenith/total?style=flat-square&amp;labelColor=0d1117&amp;color=ff4d6d" alt="Downloads" /></a>
-<a href="LICENSE"><img src="https://img.shields.io/github/license/rezapranata089-bit/Zenith?style=flat-square&amp;labelColor=0d1117&amp;color=ff4d6d" alt="License" /></a>
+<a href="https://github.com/rezapranata089-bit/ZeroFuel/releases/latest"><img src="https://img.shields.io/github/v/release/rezapranata089-bit/ZeroFuel?style=flat-square&amp;labelColor=0d1117&amp;color=ff4d6d" alt="Latest release" /></a>
+<a href="https://github.com/rezapranata089-bit/ZeroFuel/releases"><img src="https://img.shields.io/github/downloads/rezapranata089-bit/ZeroFuel/total?style=flat-square&amp;labelColor=0d1117&amp;color=ff4d6d" alt="Downloads" /></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/rezapranata089-bit/ZeroFuel?style=flat-square&amp;labelColor=0d1117&amp;color=ff4d6d" alt="License" /></a>
 <img src="https://img.shields.io/badge/Android-8.0%2B-ff4d6d?style=flat-square&amp;labelColor=0d1117" alt="Android 8.0+" />
-<a href="https://www.reddit.com/r/ZenithMusic/s/gN6chb7onR"><img src="https://img.shields.io/badge/Reddit-r%2FZenithMusic-ff4d6d?style=flat-square&amp;logo=reddit&amp;logoColor=white&amp;labelColor=0d1117" alt="Reddit community" /></a>
+<a href="https://www.reddit.com/r/ZeroFuelMusic/s/gN6chb7onR"><img src="https://img.shields.io/badge/Reddit-r%2FZeroFuelMusic-ff4d6d?style=flat-square&amp;logo=reddit&amp;logoColor=white&amp;labelColor=0d1117" alt="Reddit community" /></a>
 </p>
 
-<a href="https://github.com/rezapranata089-bit/Zenith/releases/latest"><img src="https://img.shields.io/badge/Download%20the%20latest%20APK-ff4d6d?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Download the latest APK" /></a>
+<a href="https://github.com/rezapranata089-bit/ZeroFuel/releases/latest"><img src="https://img.shields.io/badge/Download%20the%20latest%20APK-ff4d6d?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Download the latest APK" /></a>
 
 <p>
 <a href="#screenshots">Screenshots</a> ·
@@ -27,10 +27,10 @@
 </div>
 
 > [!IMPORTANT]
-> Zenith is not affiliated with, endorsed by, or connected to YouTube or Google in any way. Use it at your own discretion.
+> ZeroFuel is not affiliated with, endorsed by, or connected to YouTube or Google in any way. Use it at your own discretion.
 
 > [!NOTE]
-> **A note from the developer:** Zenith is built entirely on my phone. I don't have a laptop or PC of my own, so every line of code, every build and every release is done from mobile. It's slow and sometimes painful, so please bear with me if you run into bugs or rough edges. If something is broken or missing, please [open an issue](../../issues). Thank you for using Zenith!
+> **A note from the developer:** ZeroFuel is built entirely on my phone. I don't have a laptop or PC of my own, so every line of code, every build and every release is done from mobile. It's slow and sometimes painful, so please bear with me if you run into bugs or rough edges. If something is broken or missing, please [open an issue](../../issues). Thank you for using ZeroFuel!
 
 ---
 
@@ -71,7 +71,7 @@
 
 ## Download
 
-1. Open the [latest release](https://github.com/rezapranata089-bit/Zenith/releases/latest).
+1. Open the [latest release](https://github.com/rezapranata089-bit/ZeroFuel/releases/latest).
 2. Download the APK file.
 3. Open it and allow "Install unknown apps" if Android asks.
 
@@ -81,7 +81,7 @@
 | **Architecture** | arm64 |
 | **Updates** | Checked inside the app |
 
-Past versions and their changes are listed in [Releases](https://github.com/rezapranata089-bit/Zenith/releases).
+Past versions and their changes are listed in [Releases](https://github.com/rezapranata089-bit/ZeroFuel/releases).
 
 ---
 
@@ -144,19 +144,19 @@ Past versions and their changes are listed in [Releases](https://github.com/reza
 
 ## What's different from BitChord
 
-Zenith is my personal fork of [BitChord](https://github.com/kushagrasinghx/BitChord), rebuilt as an Android-only app with its own identity, interface and release pipeline.
+ZeroFuel is my personal fork of [BitChord](https://github.com/kushagrasinghx/BitChord), rebuilt as an Android-only app with its own identity, interface and release pipeline.
 
 ---
 
 ## Community
 
-Join the discussion, share feedback or ask for help on [r/ZenithMusic](https://www.reddit.com/r/ZenithMusic/s/gN6chb7onR). Bug reports and feature requests are still welcome as [GitHub issues](../../issues).
+Join the discussion, share feedback or ask for help on [r/ZeroFuelMusic](https://www.reddit.com/r/ZeroFuelMusic/s/gN6chb7onR). Bug reports and feature requests are still welcome as [GitHub issues](../../issues).
 
 ---
 
 ## Credits
 
-Zenith is built on top of [BitChord](https://github.com/kushagrasinghx/BitChord) by [kushagrasinghx](https://github.com/kushagrasinghx) and its contributors. Thank you for the foundation.
+ZeroFuel is built on top of [BitChord](https://github.com/kushagrasinghx/BitChord) by [kushagrasinghx](https://github.com/kushagrasinghx) and its contributors. Thank you for the foundation.
 
 - **LiquidFlow** lyric effect: inspired by [Mochy Music](https://github.com/realidkroo/Mochy-Music) by [realidkroo](https://github.com/realidkroo).
 
@@ -167,9 +167,9 @@ Zenith is built on top of [BitChord](https://github.com/kushagrasinghx/BitChord)
 <details open>
 <summary><b>Legal notice</b></summary>
 
-Zenith is an independent third-party audio player. It is **not** associated with Google LLC, YouTube Music, Deezer, Telegram, or any of their parent companies.
+ZeroFuel is an independent third-party audio player. It is **not** associated with Google LLC, YouTube Music, Deezer, Telegram, or any of their parent companies.
 
-- **No media hosting**: Zenith does not host or upload copyrighted music. It only acts as an interface to local storage or to public and user-authenticated APIs.
+- **No media hosting**: ZeroFuel does not host or upload copyrighted music. It only acts as an interface to local storage or to public and user-authenticated APIs.
 - **Fair use**: made for personal, research and educational purposes. You are responsible for following your local copyright laws and the YouTube Terms of Service.
 - **No guarantees**: features may stop working if third-party platforms change their rules.
 

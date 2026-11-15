@@ -210,7 +210,7 @@
     <string name="sign_in_youtube_music">Sign in to YouTube Music</string>
     <string name="subscriptions">Subscriptions</string>
     <string name="your_replay">Your Replay</string>
-    <string name="default_replay_holder">Zenith listener</string>
+    <string name="default_replay_holder">ZeroFuel listener</string>
     <string name="import_spotify">Import Spotify</string>
     <string name="import_spotify_subtitle">From a playlist link</string>
     <string name="sign_in_with_google">Sign in with Google</string>

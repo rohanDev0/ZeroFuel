@@ -1,13 +1,13 @@
 package com.music.zenith.data.discord
 
 /**
- * Zenith's own Discord application, shared by the phone and desktop presence.
+ * ZeroFuel's own Discord application, shared by the phone and desktop presence.
  *
  * Discord reads more off this id than the code suggests. The local socket on
  * the desktop titles the activity with the application's registered name, some
  * Discord surfaces do the same for a gateway activity that carries it, and an
  * activity with no `large_image` shows the application's icon. Both come from
- * the developer portal entry, so the name there has to stay "Zenith".
+ * the developer portal entry, so the name there has to stay "ZeroFuel".
  *
  * It replaced Metrolist's id, inherited along with the Kizzy port, which made
  * presences read "Listening to Metrolist" wherever Discord preferred the

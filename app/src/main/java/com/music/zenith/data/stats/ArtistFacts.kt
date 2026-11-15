@@ -317,9 +317,9 @@ object ArtistFacts {
         val cardAt: Long = 0L,
     )
 
-    private const val TAG = "ZenithArtists"
+    private const val TAG = "ZeroFuelArtists"
     private const val FILE_NAME = "artist_facts.json"
-    private const val USER_AGENT = "Zenith/${BuildConfig.VERSION_NAME}"
+    private const val USER_AGENT = "ZeroFuel/${BuildConfig.VERSION_NAME}"
     private const val MAX_NAME_LENGTH = 120
     private const val MAX_GENRES_PER_ARTIST = 2
     private const val MAX_ARTISTS = 4_000

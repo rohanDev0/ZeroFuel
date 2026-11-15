@@ -152,7 +152,7 @@ internal fun AudioOutputSheet(
                     )
                 }
             }
-            // The watch, when one with Zenith on it is in reach: picked
+            // The watch, when one with ZeroFuel on it is in reach: picked
             // directly, since there is only ever the one.
             if (watch.available || watch.active) {
                 OutputItem(

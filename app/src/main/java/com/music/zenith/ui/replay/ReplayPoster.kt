@@ -205,8 +205,8 @@ private fun drawRecapPoster(
     val title = if (label.length == 4 && label.all { it.isDigit() }) "Replay'${label.takeLast(2)}" else "Replay · $label"
     canvas.drawText(title, MARGIN, 150f, type.heading(62f, Color.WHITE))
     val brand = type.heading(46f, 0xE6FFFFFF.toInt()).apply { textAlign = Paint.Align.RIGHT }
-    canvas.drawText("Zenith", w - MARGIN, 150f, brand)
-    drawLogo(canvas, context, w - MARGIN - brand.measureText("Zenith") - LOGO_GAP, 150f)
+    canvas.drawText("ZeroFuel", w - MARGIN, 150f, brand)
+    drawLogo(canvas, context, w - MARGIN - brand.measureText("ZeroFuel") - LOGO_GAP, 150f)
 
     val year = type.heading(190f, Color.WHITE).apply { textAlign = Paint.Align.CENTER }
     canvas.drawText(ellipsised(label, year, CONTENT_W), w / 2f, 430f, year)
@@ -1203,11 +1203,11 @@ private fun drawHeader(
     val brand = type.heading(46f, 0xE6FFFFFF.toInt()).apply {
         textAlign = Paint.Align.RIGHT
     }
-    canvas.drawText("Zenith", POSTER_W - MARGIN, 132f, brand)
+    canvas.drawText("ZeroFuel", POSTER_W - MARGIN, 132f, brand)
     // The mark, to the left of the word, exactly as the story header and the
     // card carry it. Without it the one artefact of this app that ends up in
     // somebody else's chat was the only place the logo didn't appear.
-    val wordWidth = brand.measureText("Zenith")
+    val wordWidth = brand.measureText("ZeroFuel")
     drawLogo(canvas, context, POSTER_W - MARGIN - wordWidth - LOGO_GAP, 132f)
 
     val credit = listOfNotNull(
@@ -1517,7 +1517,7 @@ private fun drawRuns(
 }
 
 /**
- * The Zenith mark, baseline-aligned with the word beside it.
+ * The ZeroFuel mark, baseline-aligned with the word beside it.
  *
  * The same vector the app draws everywhere, tinted and given bounds rather than
  * rasterised to a PNG first — a vector drawable renders into an ordinary canvas

@@ -175,7 +175,7 @@ object ReplayClipCache {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Log.w("Zenith", "Replay backsound: could not store $videoId: ${e.message}")
+            Log.w("ZeroFuel", "Replay backsound: could not store $videoId: ${e.message}")
         }
         url
     }

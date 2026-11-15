@@ -4,7 +4,7 @@ import com.music.zenith.data.NerdStats
 import java.util.Locale
 
 /**
- * The optional audio line shown on Zenith's Discord activity card.
+ * The optional audio line shown on ZeroFuel's Discord activity card.
  *
  * Only premium formats earn a line. The values are the decoder's measured
  * figures from [NerdStats], never the quality a source merely advertised, so a

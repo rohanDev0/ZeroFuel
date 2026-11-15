@@ -54,7 +54,7 @@ import java.util.Locale
  */
 internal object QuickJsExecutor {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     /**
      * How many modules stay resident.

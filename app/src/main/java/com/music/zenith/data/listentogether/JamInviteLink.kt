@@ -13,7 +13,7 @@ data class ParsedJamInvite(
     val serverUrl: String? = null,
 )
 
-/** Relays a Zenith web or scheme invite from [com.music.zenith.MainActivity] to Compose. */
+/** Relays a ZeroFuel web or scheme invite from [com.music.zenith.MainActivity] to Compose. */
 object JamInviteLink {
 
     const val ORIGIN = "https://bitchord.kushagrasingh.in"

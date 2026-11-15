@@ -131,7 +131,7 @@ android {
         create("dev") {
             dimension = "env"
             applicationId = "com.zerofuel.music.dev"
-            resValue("string", "app_name", "Zenith Dev")
+            resValue("string", "app_name", "ZeroFuel Dev")
         }
         create("prod") {
             dimension = "env"

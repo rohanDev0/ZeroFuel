@@ -163,7 +163,7 @@ import com.music.zenith.ui.LyricsProviderState
 import com.music.zenith.ui.ManualLyricsSearchState
 import com.music.zenith.ui.haptics.Haptic
 import com.music.zenith.ui.haptics.rememberHaptics
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.music.zenith.data.canvas.CanvasSource
 import com.music.zenith.data.lyrics.LyricLine
@@ -4084,7 +4084,7 @@ fun NowPlayingScreen(
                             ) {
                                 if (!art.loaded && !canvasRendered && dissolve.outgoing == null && !dissolve.cutHold) {
                                     Icon(
-                                        imageVector = ZenithIcons.MusicNote,
+                                        imageVector = ZeroFuelIcons.MusicNote,
                                         contentDescription = null,
                                         tint = Color.White.copy(alpha = 0.35f),
                                         modifier = Modifier
@@ -4756,7 +4756,7 @@ fun NowPlayingScreen(
                             if (signedIn || song.localUri != null) {
                                 val liked = likeStatus == LikeStatus.LIKE
                                 CircleGlyph(
-                                    icon = if (liked) ZenithIcons.StarFilled else ZenithIcons.Star,
+                                    icon = if (liked) ZeroFuelIcons.StarFilled else ZeroFuelIcons.Star,
                                     contentDescription = stringResource(
                                         if (liked) Res.string.remove_from_liked else Res.string.like,
                                     ),

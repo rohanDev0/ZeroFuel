@@ -38,11 +38,11 @@ sealed interface LinkRequest {
 }
 
 /**
- * Links and voice requests handed to Zenith from elsewhere on the device.
+ * Links and voice requests handed to ZeroFuel from elsewhere on the device.
  *
  * The same relay [PlayerDeepLink] is, and for the same reason: what has to
  * happen — start a queue, push a page, run a search — is all inside
- * `ZenithApp`'s composition, which [MainActivity][com.music.zenith.MainActivity]
+ * `ZeroFuelApp`'s composition, which [MainActivity][com.music.zenith.MainActivity]
  * has no handle on. The activity reads the intent, this holds the answer, and
  * the composition serves it once its controller and view model exist.
  *

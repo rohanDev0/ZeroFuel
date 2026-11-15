@@ -311,7 +311,7 @@ import com.music.zenith.ui.components.WebDavConflictAlert
 import com.music.zenith.ui.components.FieldConfig
 import com.music.zenith.ui.icons.LocalCloseIcon
 import com.music.zenith.ui.icons.LocalShareIcon
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import androidx.media3.common.Player
 import com.music.zenith.data.YtMusicRepository
 import com.music.zenith.data.TopPicks
@@ -364,7 +364,7 @@ import com.music.zenith.ui.replay.ReplayShareSheet
 import com.music.zenith.ui.replay.ReplayStories
 import com.music.zenith.ui.replay.ReplayStoryPage
 import com.music.zenith.ui.replay.rememberReplayState
-import com.music.zenith.ui.theme.ZenithTheme
+import com.music.zenith.ui.theme.ZeroFuelTheme
 import com.music.zenith.ui.theme.rememberArtworkPalette
 import com.music.zenith.data.canvas.AppleArtistArtRepository
 import com.music.zenith.data.canvas.keyColors
@@ -400,7 +400,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         // Before the composition, so a cold launch from a widget's artwork has
-        // the request already standing by the time ZenithApp first reads it.
+        // the request already standing by the time ZeroFuelApp first reads it.
         PlayerDeepLink.consume(intent)
         JamInviteLink.consume(intent)
         // Likewise for a link tapped or shared from another app — see [MusicLink].
@@ -423,9 +423,9 @@ class MainActivity : AppCompatActivity() {
                 ThemeMode.DARK -> true
             }
             LaunchedEffect(darkTheme) { AppSettings.syncGlassPresetTheme(darkTheme) }
-            ZenithTheme(darkTheme = darkTheme, font = appFont, accent = accentColor) {
+            ZeroFuelTheme(darkTheme = darkTheme, font = appFont, accent = accentColor) {
                 // The glass surfaces sample this layer, and a layer records only
-                // what is drawn into it — which, for Zenith, is a page that
+                // what is drawn into it — which, for ZeroFuel, is a page that
                 // paints no background of its own. Everywhere a page is not
                 // showing artwork the recording is transparent, so the glass had
                 // nothing to blur there and you saw straight through it to the
@@ -512,7 +512,7 @@ class MainActivity : AppCompatActivity() {
                 // A measured constraint cannot be stale — it is the very width
                 // the split is about to be laid out in.
                 BoxWithConstraints(Modifier.fillMaxSize()) {
-                    ZenithApp(
+                    ZeroFuelApp(
                         darkTheme = darkTheme,
                         windowWidth = maxWidth,
                         windowHeight = maxHeight,
@@ -573,7 +573,7 @@ class MainActivity : AppCompatActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ZenithApp(
+private fun ZeroFuelApp(
     darkTheme: Boolean,
     /** The width of the window this is laid out in — see the call site. */
     windowWidth: Dp,
@@ -1489,10 +1489,10 @@ private fun ZenithApp(
     val openedFileLabel = stringResource(R.string.opened_file)
     val tabs = remember(homeLabel, exploreLabel, libraryLabel, searchLabel) {
         listOf(
-            BottomTab(homeLabel, ZenithIcons.Home),
-            BottomTab(exploreLabel, ZenithIcons.TabExplore),
-            BottomTab(libraryLabel, ZenithIcons.TabLibrary),
-            BottomTab(searchLabel, ZenithIcons.TabSearch),
+            BottomTab(homeLabel, ZeroFuelIcons.Home),
+            BottomTab(exploreLabel, ZeroFuelIcons.TabExplore),
+            BottomTab(libraryLabel, ZeroFuelIcons.TabLibrary),
+            BottomTab(searchLabel, ZeroFuelIcons.TabSearch),
         )
     }
     // The bars draw this list; [tabs] stays the four fixed pages (titles and
@@ -2181,7 +2181,7 @@ private fun ZenithApp(
 
     /**
      * A YouTube Music link tapped elsewhere on the device, a link shared into
-     * Zenith, or "play something" said to the assistant — see [MusicLink].
+     * ZeroFuel, or "play something" said to the assistant — see [MusicLink].
      *
      * Keyed on the controller as well as the request, because a link is as
      * often as not what cold-starts the app: the session it has to play into is
@@ -4356,7 +4356,7 @@ private fun ZenithApp(
                                 ActionReveal(visible = actionsOpen && releaseSongs.isNotEmpty()) {
                                     IconButton(onClick = { detailSearching = !detailSearching }) {
                                         Icon(
-                                            if (detailSearching) Icons.Rounded.Close else ZenithIcons.Search,
+                                            if (detailSearching) Icons.Rounded.Close else ZeroFuelIcons.Search,
                                             contentDescription = stringResource(
                                                 if (detailSearching) R.string.close_search else R.string.search_this_list,
                                             ),
@@ -6635,7 +6635,7 @@ private fun FrostedFolderMenu(
             label = stringResource(if (grid) R.string.switch_to_list_view else R.string.switch_to_grid_view),
             checked = false,
             onClick = onToggleViewType,
-            icon = if (grid) ZenithIcons.ListView else ZenithIcons.GridView,
+            icon = if (grid) ZeroFuelIcons.ListView else ZeroFuelIcons.GridView,
         )
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 4.dp),

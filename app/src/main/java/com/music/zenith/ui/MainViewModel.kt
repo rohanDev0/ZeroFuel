@@ -2104,7 +2104,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Log.w("Zenith", "topPicks failed: ${e.message}")
+            Log.w("ZeroFuel", "topPicks failed: ${e.message}")
             null
         }
     }
@@ -2345,7 +2345,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 onSuccess()
             }.onFailure {
                 // Keep the existing history list untouched — do NOT replace it with an error
-                Log.w("Zenith", "removeFromHistory failed: ${it.message}")
+                Log.w("ZeroFuel", "removeFromHistory failed: ${it.message}")
                 onFailure(it)
             }
         }

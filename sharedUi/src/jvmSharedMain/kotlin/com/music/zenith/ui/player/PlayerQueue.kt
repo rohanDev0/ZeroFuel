@@ -78,7 +78,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Velocity
 import coil3.compose.AsyncImage
 import com.music.zenith.ui.components.thumbnailBorder
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import androidx.compose.material.icons.rounded.Add
 import com.music.zenith.ui.haptics.Haptic
 import com.music.zenith.ui.haptics.rememberHaptics
@@ -517,7 +517,7 @@ private fun QueueModeRow(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         QueueModeButton(
-            icon = ZenithIcons.Shuffle,
+            icon = ZeroFuelIcons.Shuffle,
             contentDescription = stringResource(
                 if (shuffleEnabled) Res.string.shuffle_on else Res.string.shuffle_off,
             ),
@@ -530,7 +530,7 @@ private fun QueueModeRow(
             modifier = Modifier.weight(1f),
         )
         QueueModeButton(
-            icon = if (repeatMode == RepeatModes.ONE) ZenithIcons.RepeatOne else ZenithIcons.Repeat,
+            icon = if (repeatMode == RepeatModes.ONE) ZeroFuelIcons.RepeatOne else ZeroFuelIcons.Repeat,
             contentDescription = when (repeatMode) {
                 RepeatModes.ONE -> stringResource(Res.string.repeat_one)
                 RepeatModes.ALL -> stringResource(Res.string.repeat_all)
@@ -546,7 +546,7 @@ private fun QueueModeRow(
             modifier = Modifier.weight(1f),
         )
         QueueModeButton(
-            icon = ZenithIcons.Infinity,
+            icon = ZeroFuelIcons.Infinity,
             contentDescription = stringResource(
                 if (autoplayEnabled) Res.string.autoplay_on else Res.string.autoplay_off,
             ),
@@ -623,7 +623,7 @@ private fun AutoplayHeading(hasTracks: Boolean, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            ZenithIcons.Infinity,
+            ZeroFuelIcons.Infinity,
             contentDescription = null,
             tint = Color.White.copy(alpha = 0.75f),
             modifier = Modifier.size(18.dp),

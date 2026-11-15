@@ -21,7 +21,7 @@ import java.io.InputStream
  *
  * Two fields are read, in this order:
  *
- *  - `ZENITH_LYRICS`, this app's own, holding the "enhanced" A2 form with the
+ *  - `ZEROFUEL_LYRICS`, this app's own, holding the "enhanced" A2 form with the
  *    word timings intact — see [toEnhancedLrc].
  *  - the container's standard lyrics field, holding plain `[mm:ss.xx]` LRC.
  *
@@ -46,7 +46,7 @@ import java.io.InputStream
  */
 object EmbeddedLyrics {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     /**
      * Most bytes worth pulling to find a tag.

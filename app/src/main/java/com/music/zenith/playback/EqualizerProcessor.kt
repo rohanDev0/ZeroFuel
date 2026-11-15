@@ -408,7 +408,7 @@ class EqualizerProcessor : BaseAudioProcessor() {
     }
 
     companion object {
-        private const val TAG = "ZenithEqualizer"
+        private const val TAG = "ZeroFuelEqualizer"
 
         private const val BYTES_PER_SAMPLE = 2
 

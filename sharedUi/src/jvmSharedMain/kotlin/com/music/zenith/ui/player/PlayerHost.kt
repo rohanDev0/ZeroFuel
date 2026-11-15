@@ -124,7 +124,7 @@ interface PlayerHost {
     val castState: StateFlow<CastUi> get() = NoCast
 
     /**
-     * The Zenith watch app as an output: the watch plays the queue the way a
+     * The ZeroFuel watch app as an output: the watch plays the queue the way a
      * Cast receiver does. Absent, and so never drawn, where there is no watch.
      */
     val watchOutput: StateFlow<WatchOutputUi> get() = NoWatch
@@ -204,7 +204,7 @@ private val NoWatch = MutableStateFlow(WatchOutputUi())
 
 /** What the output drawer needs to draw the watch's row. */
 data class WatchOutputUi(
-    /** A watch with Zenith on it is in reach. False (and not [active]) hides the row. */
+    /** A watch with ZeroFuel on it is in reach. False (and not [active]) hides the row. */
     val available: Boolean = false,
     /** What the watch calls itself; the drawer has a generic name for when it says nothing. */
     val name: String? = null,

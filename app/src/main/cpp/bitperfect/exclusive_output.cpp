@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Zenith Project
+ * Copyright (C) 2026 ZeroFuel Project
  *
  * Adapted from Mornye (https://github.com/mornyeapp/Mornye),
  * android/app/src/main/cpp/native_audio.cpp (ExclusiveOutput),

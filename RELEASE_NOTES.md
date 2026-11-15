@@ -10,7 +10,7 @@
 - Browse your statistics by past month and year.
 - Fading backsound for the stories: it starts without waiting for the full download, loads sooner, and is cached and cleaned up automatically.
 - Listening done on a remote speaker now counts toward your stats.
-- Replay header logo now lines up with the Zenith wordmark.
+- Replay header logo now lines up with the ZeroFuel wordmark.
 
 ### Home
 - New Speed Dial: a grid built from your most played songs, pinned to the top of Home.
@@ -104,7 +104,7 @@
 - New dedicated Liquid Glass settings page with per-effect sliders, including indicator controls.
 - New Liquid Glass and Kyant glass bottom bar looks, with a deeper refraction through the selection pill.
 - Continuous glass clarity slider with a gentler clear side, and tappable clarity labels as presets.
-- The current glass settings are now the Zenith default, with separate values for light and dark theme.
+- The current glass settings are now the ZeroFuel default, with separate values for light and dark theme.
 - The selection pill lens refracts the tab bar rim and tab icons, with softer chromatic aberration and a dimmer rim and halo inside the lens.
 - The tab bar swells fluidly while you drag the selection pill, and the flat pill no longer clips on release.
 - Glass bars stay visible in the light theme and inactive navbar icons are more solid.

@@ -25,7 +25,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import org.jetbrains.compose.resources.painterResource
 import com.music.zenith.sharedui.resources.spotify_logo
 import com.music.zenith.sharedui.resources.Res
@@ -283,7 +283,7 @@ private fun LikedFeaturedCard(
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = ZenithIcons.ChevronRight,
+                imageVector = ZeroFuelIcons.ChevronRight,
                 contentDescription = null,
                 tint = Color.Black,
                 modifier = Modifier.size(18.dp),

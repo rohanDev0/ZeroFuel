@@ -158,7 +158,7 @@ private fun BacksoundPlayer(
             val source = withTimeoutOrNull(PREPARE_TIMEOUT_MS) { prepare(song, grace).await() }
             // The next song is made ready while this one plays.
             if (next.clipKey() != song.clipKey()) prepare(next)
-            if (source == null) Log.w("Zenith", "Replay backsound: ${song.clipKey()} could not be prepared")
+            if (source == null) Log.w("ZeroFuel", "Replay backsound: ${song.clipKey()} could not be prepared")
             val played = source != null &&
                 playSegment(player, level, { silencedNow }, song, source)
             // This song is done with: its copy goes now, not when the Replay closes.
@@ -197,7 +197,7 @@ private suspend fun playSegment(
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            Log.w("Zenith", "Replay backsound: ${error.errorCodeName}: ${error.message}")
+            Log.w("ZeroFuel", "Replay backsound: ${error.errorCodeName}: ${error.message}")
             ready.complete(false)
         }
     }
@@ -253,7 +253,7 @@ private suspend fun playSegment(
                 lastPosition = position
                 stalledMs = 0L
             } else if (stalledMs + POLL_MS >= STALL_MS) {
-                Log.w("Zenith", "Replay backsound: ${song.clipKey()} stalled")
+                Log.w("ZeroFuel", "Replay backsound: ${song.clipKey()} stalled")
                 return false
             } else {
                 stalledMs += POLL_MS

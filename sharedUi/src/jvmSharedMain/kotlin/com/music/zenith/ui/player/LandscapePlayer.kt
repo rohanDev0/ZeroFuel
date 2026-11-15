@@ -75,7 +75,7 @@ import coil3.request.ImageRequest
 import com.music.zenith.ui.components.ExplicitBadge
 import com.music.zenith.ui.components.menuAnchor
 import com.music.zenith.ui.haptics.Haptic
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.theme.stableStatusBarInsets
 import com.music.zenith.data.canvas.CanvasArtwork
 import com.music.zenith.data.model.LikeStatus
@@ -424,7 +424,7 @@ internal fun LandscapeArtwork(
         ) {
             if (!artLoaded && !canvasRendered && dissolve?.outgoing == null && dissolve?.cutHold != true) {
                 Icon(
-                    imageVector = ZenithIcons.MusicNote,
+                    imageVector = ZeroFuelIcons.MusicNote,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.35f),
                     modifier = Modifier.fillMaxSize(0.36f),
@@ -709,7 +709,7 @@ internal fun LandscapeCredits(
         if (signedIn || song.localUri != null) {
             val liked = likeStatus == LikeStatus.LIKE
             CircleGlyph(
-                icon = if (liked) ZenithIcons.StarFilled else ZenithIcons.Star,
+                icon = if (liked) ZeroFuelIcons.StarFilled else ZeroFuelIcons.Star,
                 contentDescription = stringResource(
                     if (liked) Res.string.remove_from_liked else Res.string.like,
                 ),

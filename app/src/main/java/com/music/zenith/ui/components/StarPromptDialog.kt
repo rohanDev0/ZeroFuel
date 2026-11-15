@@ -48,7 +48,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 
-private const val STAR_REPO_URL = "https://github.com/rezapranata089-bit/Zenith"
+private const val STAR_REPO_URL = "https://github.com/rezapranata089-bit/ZeroFuel"
 
 /**
  * When to ask for a GitHub star. GitHub can't tell the app who has already
@@ -261,7 +261,7 @@ private fun StarPromptDialog(
         ) {
             AnimatedStarBadge()
             Text(
-                text = "Enjoying Zenith?",
+                text = "Enjoying ZeroFuel?",
                 modifier = Modifier.padding(top = 14.dp),
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp, fontWeight = FontWeight.W600),
                 color = MaterialTheme.colorScheme.onSurface,

@@ -659,7 +659,7 @@ fun SettingsScreen(
                 //
                 // Greyed rather than hidden where the device can't decode E-AC-3.
                 // A missing row reads as a feature the app doesn't have; a disabled
-                // one with a reason under it is the difference between "Zenith
+                // one with a reason under it is the difference between "ZeroFuel
                 // has no Atmos" and "this phone has no Dolby decoder", and only the
                 // second is true. The stored preference is left untouched either
                 // way — see [AppSettings.dolbyAtmos].
@@ -731,7 +731,7 @@ fun SettingsScreen(
                     title = exportDownloadsTitle,
                     checked = exportDownloads,
                     onCheckedChange = AppSettings::setExportDownloads,
-                    subtitle = (LocalMediaRepository.selectedFolderLabel(downloadFolderUri) ?: "Music/Zenith")
+                    subtitle = (LocalMediaRepository.selectedFolderLabel(downloadFolderUri) ?: "Music/ZeroFuel")
                         .takeIf { exportDownloads },
                 )
             }
@@ -754,7 +754,7 @@ fun SettingsScreen(
                     SettingsRow(
                         icon = SfIcons.LibraryMusic,
                         title = useDefaultDownloadFolderTitle,
-                        subtitle = "Music/Zenith",
+                        subtitle = "Music/ZeroFuel",
                         onClick = {
                             releaseFolderGrant(downloadFolderUri, AppSettings.localMusicFolderUri.value)
                             AppSettings.setDownloadFolderUri("")
@@ -1042,7 +1042,7 @@ fun SettingsScreen(
                 }
             }
             // The system panel is not listed here as well. A device with a
-            // Dolby or Dirac panel has something Zenith cannot reproduce and
+            // Dolby or Dirac panel has something ZeroFuel cannot reproduce and
             // keeps its row — but one level in, at the foot of the equaliser
             // screen, rather than as a second equaliser entry alongside ours.
             val equalizerTitle = stringResource(R.string.equalizer)
@@ -2062,7 +2062,7 @@ fun SettingsScreen(
                         modifier = Modifier.size(14.dp),
                     )
                     Text(
-                        text = "Support Zenith",
+                        text = "Support ZeroFuel",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -2079,7 +2079,7 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Zenith $version",
+                        text = "ZeroFuel $version",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -2089,7 +2089,7 @@ fun SettingsScreen(
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("https://github.com/rezapranata089-bit/Zenith")
+                            context.openLink("https://github.com/rezapranata089-bit/ZeroFuel")
                         },
                     )
                     Text(
@@ -2107,7 +2107,7 @@ fun SettingsScreen(
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("https://www.reddit.com/r/ZenithMusic/s/gN6chb7onR")
+                            context.openLink("https://www.reddit.com/r/ZeroFuelMusic/s/gN6chb7onR")
                         },
                     )
                     Text(

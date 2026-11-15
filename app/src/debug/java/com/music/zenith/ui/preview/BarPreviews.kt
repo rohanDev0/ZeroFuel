@@ -32,8 +32,8 @@ import com.music.zenith.ui.components.FrostedTopBar
 import com.music.zenith.ui.components.MiniPlayer
 import com.music.zenith.ui.components.TopFadeBlur
 import com.music.zenith.ui.components.TopBarBlur
-import com.music.zenith.ui.icons.ZenithIcons
-import com.music.zenith.ui.theme.ZenithTheme
+import com.music.zenith.ui.icons.ZeroFuelIcons
+import com.music.zenith.ui.theme.ZeroFuelTheme
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 
@@ -109,10 +109,10 @@ private val PreviewSong = Song(
 )
 
 private val PreviewTabs = listOf(
-    BottomTab("Play", ZenithIcons.Play),
-    BottomTab("Explore", ZenithIcons.TabExplore),
-    BottomTab("Library", ZenithIcons.TabLibrary),
-    BottomTab("Search", ZenithIcons.TabSearch),
+    BottomTab("Play", ZeroFuelIcons.Play),
+    BottomTab("Explore", ZeroFuelIcons.TabExplore),
+    BottomTab("Library", ZeroFuelIcons.TabLibrary),
+    BottomTab("Search", ZeroFuelIcons.TabSearch),
 )
 
 /**
@@ -179,20 +179,20 @@ private fun ChromeStack(scrolled: Boolean, withMiniPlayer: Boolean) {
 @Preview(name = "Chrome · dark", device = "id:pixel_8", showBackground = true)
 @Composable
 private fun ChromeDarkPreview() {
-    ZenithTheme(darkTheme = true) { ChromeStack(scrolled = true, withMiniPlayer = false) }
+    ZeroFuelTheme(darkTheme = true) { ChromeStack(scrolled = true, withMiniPlayer = false) }
 }
 
 @Preview(name = "Chrome · light", device = "id:pixel_8", showBackground = true)
 @Composable
 private fun ChromeLightPreview() {
-    ZenithTheme(darkTheme = false) { ChromeStack(scrolled = true, withMiniPlayer = false) }
+    ZeroFuelTheme(darkTheme = false) { ChromeStack(scrolled = true, withMiniPlayer = false) }
 }
 
 /** The taller scrim, which the mini player's arrival grows it into. */
 @Preview(name = "Chrome · mini player", device = "id:pixel_8", showBackground = true)
 @Composable
 private fun ChromeMiniPlayerPreview() {
-    ZenithTheme(darkTheme = true) { ChromeStack(scrolled = true, withMiniPlayer = true) }
+    ZeroFuelTheme(darkTheme = true) { ChromeStack(scrolled = true, withMiniPlayer = true) }
 }
 
 /**
@@ -213,7 +213,7 @@ private fun ChromeMiniPlayerPreview() {
 )
 @Composable
 private fun MiniPlayerPreview() {
-    ZenithTheme {
+    ZeroFuelTheme {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -265,7 +265,7 @@ private fun MiniPlayerPreview() {
 )
 @Composable
 private fun ScrimRampPreview() {
-    ZenithTheme {
+    ZeroFuelTheme {
         Box(Modifier.fillMaxSize()) {
             // A mid grey under it: the ramp reads as a ramp against this,
             // whereas over the theme's own background it is invisible by
@@ -290,7 +290,7 @@ private fun ScrimRampPreview() {
 @Preview(name = "Top bar · backdrops", device = "id:pixel_8", showBackground = true)
 @Composable
 private fun TopBarBackdropPreview() {
-    ZenithTheme(darkTheme = true) {
+    ZeroFuelTheme(darkTheme = true) {
         Column(
             Modifier
                 .fillMaxSize()

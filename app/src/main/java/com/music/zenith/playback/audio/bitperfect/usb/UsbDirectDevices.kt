@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Zenith Project
+ * Copyright (C) 2026 ZeroFuel Project
  *
  * Adapted in part from Mornye (https://github.com/mornyeapp/Mornye),
  * android/app/src/main/kotlin/com/zarz/mornye/UsbDirectPlayback.kt,

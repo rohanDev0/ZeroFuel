@@ -93,10 +93,10 @@ object Backup {
                 ?.use { it.readBytes().decodeToString() }
                 ?: error("Couldn't open that file")
             val file = runCatching { json.decodeFromString(BackupFile.serializer(), text) }
-                .getOrElse { error("That doesn't look like a Zenith backup") }
+                .getOrElse { error("That doesn't look like a ZeroFuel backup") }
             require(file.app == APP_TAG) { "That backup is from another app" }
             require(file.version <= SCHEMA_VERSION) {
-                "That backup was written by a newer version of Zenith"
+                "That backup was written by a newer version of ZeroFuel"
             }
 
             ListeningStats.importAll(file.listening)

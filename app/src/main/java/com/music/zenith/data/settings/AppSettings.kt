@@ -220,7 +220,7 @@ enum class GlassPreset(
     val darkIndicator: GlassIndicator,
     val frosted: Boolean = false,
 ) {
-    /** Tampilan bawaan Zenith. */
+    /** Tampilan bawaan ZeroFuel. */
     DEFAULT(
         level = 0.13f,
         custom = GlassCustom(
@@ -317,7 +317,7 @@ enum class BitPerfectMode {
     OFF,
 
     /**
-     * Zenith's own USB Audio Class driver on libusb: any Android version,
+     * ZeroFuel's own USB Audio Class driver on libusb: any Android version,
      * volume set on the DAC itself. Requires USB permission.
      */
     USB_DIRECT,
@@ -577,7 +577,7 @@ object AppSettings {
     val bitPerfectMode = MutableStateFlow(BitPerfectMode.OFF)
 
     /**
-     * Lets direct USB play to a DAC with no volume control Zenith can set:
+     * Lets direct USB play to a DAC with no volume control ZeroFuel can set:
      * full scale, with the DAC's own knob (if any) the only volume. Off unless
      * the listener accepts a second warning.
      */
@@ -604,7 +604,7 @@ object AppSettings {
      * normalizes by default for the same reason.
      *
      * The case against it is that a constant gain is still a multiplication,
-     * so this is the first thing in Zenith that is *on* out of the box and
+     * so this is the first thing in ZeroFuel that is *on* out of the box and
      * alters samples. Rather than hide that, the Audio Pipeline readout names
      * it: its Bit-exact row reports the first stage in the chain that is
      * altering samples, and switching this off is the first thing a listener
@@ -1265,7 +1265,7 @@ object AppSettings {
 
     /**
      * A temporary cap on [effectiveAudioQuality], for as long as something other
-     * than this phone's own speaker is playing — the Zenith watch app, whose
+     * than this phone's own speaker is playing — the ZeroFuel watch app, whose
      * audio goes over a Bluetooth link that cannot keep up with lossless. Never
      * persisted, never shown: the listener's own settings are untouched, and
      * apply again the moment the phone takes the music back.
@@ -1686,7 +1686,7 @@ object AppSettings {
      * the very first call seeds the stored value from [currentVersionCode]
      * rather than reporting an update.
      *
-     * Zenith ships sideloaded (see [com.music.zenith.data.AppUpdateChecker]),
+     * ZeroFuel ships sideloaded (see [com.music.zenith.data.AppUpdateChecker]),
      * so installing a new APK over the old one is the only "update" there is —
      * app data, this pref included, survives it exactly like a Play Store
      * update. Call once per process start, before anything reads a cache that
@@ -2237,7 +2237,7 @@ object AppSettings {
         setFrostedGlass(preset.frosted)
     }
 
-    /** Tema berganti: kalau masih memakai preset Zenith, nilainya ikut tema baru. */
+    /** Tema berganti: kalau masih memakai preset ZeroFuel, nilainya ikut tema baru. */
     fun syncGlassPresetTheme(dark: Boolean) {
         glassDarkTheme = dark
         val preset = GlassPreset.DEFAULT

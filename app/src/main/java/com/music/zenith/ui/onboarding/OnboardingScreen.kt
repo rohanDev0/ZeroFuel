@@ -74,7 +74,7 @@ import com.music.zenith.sharedui.resources.Res
 import com.music.zenith.sharedui.resources.ic_google_g
 import com.music.zenith.sharedui.resources.ic_logo
 import org.jetbrains.compose.resources.painterResource
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.player.MeshGradientBackground
 import com.music.zenith.ui.player.MESH_CYCLE_MILLIS
 import com.music.zenith.ui.player.MeshPalette
@@ -423,7 +423,7 @@ private fun BackButton(onClick: () -> Unit) {
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = ZenithIcons.ChevronRight,
+            imageVector = ZeroFuelIcons.ChevronRight,
             contentDescription = stringResource(R.string.onboarding_back),
             tint = Color.White,
             modifier = Modifier

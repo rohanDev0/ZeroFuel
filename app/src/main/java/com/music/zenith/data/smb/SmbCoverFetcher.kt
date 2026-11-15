@@ -15,7 +15,7 @@ import okio.source
  * kilobytes, and listings already cap what can be one — then hands Coil
  * bytes it decodes and caches exactly like any network image.
  *
- * Registered in [ZenithApplication][com.music.zenith.ZenithApplication]
+ * Registered in [ZeroFuelApplication][com.music.zenith.ZeroFuelApplication]
  * alongside the defaults: anything that isn't `smb://` falls straight
  * through to them.
  */

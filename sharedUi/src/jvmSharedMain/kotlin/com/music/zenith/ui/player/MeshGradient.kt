@@ -239,7 +239,7 @@ private const val BLOB_ALPHA = 0.85f
 const val MESH_CYCLE_MILLIS = 3_600
 
 /**
- * Zenith's own colours, for the surfaces that have no artwork to take them
+ * ZeroFuel's own colours, for the surfaces that have no artwork to take them
  * from: the welcome pages and the sign-in card on Home. Starts on Apple
  * Music's red and wanders off from there.
  */

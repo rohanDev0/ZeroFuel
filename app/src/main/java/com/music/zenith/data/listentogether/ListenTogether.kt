@@ -5,7 +5,7 @@ import android.os.SystemClock
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
-import com.music.zenith.ZenithApplication
+import com.music.zenith.ZeroFuelApplication
 import com.music.zenith.BuildConfig
 import com.music.zenith.data.DebugLog as Log
 import com.music.zenith.data.settings.AppSettings
@@ -1466,7 +1466,7 @@ object ListenTogether {
      * real account identifiers would be holding something it has no use for.
      */
     private fun identity(nickname: String = nickname()): Identity? {
-        val store = ZenithApplication.authStore
+        val store = ZeroFuelApplication.authStore
         if (!store.isSignedIn) return null
         val account = store.activeSession ?: return null
         val profile = account.profiles.firstOrNull { it.profileId == account.activeProfileId }
@@ -1558,7 +1558,7 @@ object ListenTogether {
         val id = identity() ?: return null
         // Foto buatan pengguna hanya ada di perangkat ini, jadi hanya dipakai untuk
         // tampilan lokal. Yang dikirim ke party tetap [Identity.avatar] (URL http).
-        val account = ZenithApplication.authStore.activeSession
+        val account = ZeroFuelApplication.authStore.activeSession
         val override = AppSettings.profileOverride.value
         if (account != null && override.owner == AppSettings.profileOwnerOf(account.email)) {
             override.photoPath
