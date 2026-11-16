@@ -41,8 +41,13 @@ buildscript {
  * No "v" in the name — the in-app updater reads it as a number; the "v" is the
  * release tag's alone.
  */
-extra["zenithVersionCode"] = 1
-extra["zenithVersionName"] = "1.0.0"
+extra["zenithVersionCode"] =
+    providers.gradleProperty("version_code").orElse("1").get().toInt()
+
+extra["zenithVersionName"] =
+    providers.gradleProperty("version_name").orElse("1.0.0").get()
+
+extra["zenithBetaSuffix"] = ""
 
 /*
  * Bump this by hand before cutting each sideloaded test build ("beta2",
