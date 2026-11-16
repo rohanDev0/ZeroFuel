@@ -410,28 +410,39 @@ class MainActivity : AppCompatActivity() {
         // Likewise for a link tapped or shared from another app — see [MusicLink].
         MusicLink.consume(intent)
         setContent {
-            if (betaStatus == null) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
+
+    var betaStatus by remember {
+        mutableStateOf<BetaKillSwitch.Status?>(null)
     }
-} else if (betaStatus?.enabled == false) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = betaStatus?.message
-                ?: "This beta version is currently unavailable.",
-            textAlign = TextAlign.Center
-        )
+
+    LaunchedEffect(Unit) {
+        betaStatus = BetaKillSwitch.check(this@MainActivity)
     }
-} else {
-            val theme by AppSettings.themeMode.collectAsStateWithLifecycle()
+
+    if (betaStatus == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else if (betaStatus?.enabled == false) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = betaStatus?.message
+                    ?: "This beta version is expired. Contact developer for new apk or check back later.",
+                textAlign = TextAlign.Center
+            )
+        }
+    } else {
+
+        val theme by AppSettings.themeMode.collectAsStateWithLifecycle()
+
             var betaStatus by remember {
              mutableStateOf<BetaKillSwitch.Status?>(null)
 }
