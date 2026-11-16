@@ -427,21 +427,31 @@ class MainActivity : AppCompatActivity() {
             CircularProgressIndicator()
         }
     } else if (betaStatus?.enabled == false) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = betaStatus?.message
-                    ?: "This beta version is expired. Contact developer for new apk or check back later.",
-                textAlign = TextAlign.Center
-            )
-        }
-    } else {
 
-        val theme by AppSettings.themeMode.collectAsStateWithLifecycle()
+    MaterialTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = betaStatus?.message
+                        ?: "This beta version is expired. Contact developer for new apk or check back later.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+    }
+
+} else { 
+            val theme by AppSettings.themeMode.collectAsStateWithLifecycle()
             val appFont by AppSettings.appFont.collectAsStateWithLifecycle()
             val accentColor by AppSettings.accentColor.collectAsStateWithLifecycle()
             val highPerformance by AppSettings.highPerformanceMode.collectAsStateWithLifecycle()
