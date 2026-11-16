@@ -442,14 +442,6 @@ class MainActivity : AppCompatActivity() {
     } else {
 
         val theme by AppSettings.themeMode.collectAsStateWithLifecycle()
-
-            var betaStatus by remember {
-             mutableStateOf<BetaKillSwitch.Status?>(null)
-}
-
-LaunchedEffect(Unit) {
-    betaStatus = BetaKillSwitch.check(this@MainActivity)
-}
             val appFont by AppSettings.appFont.collectAsStateWithLifecycle()
             val accentColor by AppSettings.accentColor.collectAsStateWithLifecycle()
             val highPerformance by AppSettings.highPerformanceMode.collectAsStateWithLifecycle()
