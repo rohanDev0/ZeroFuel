@@ -1,6 +1,7 @@
 package com.music.zenith
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -8,6 +9,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object BetaKillSwitch {
+
+    private const val TAG = "ZeroFuelKillSwitch"
 
     private const val CONFIG_URL =
         "https://raw.githubusercontent.com/rohanDev0/zerofuel/beta/beta-config.json"
@@ -24,8 +27,11 @@ object BetaKillSwitch {
     suspend fun check(context: Context): Status =
         withContext(Dispatchers.IO) {
 
-            // Never affect the production app.
-            if (BuildConfig.APPLICATION_ID != "com.zerofuel.music.dev") {
+            val appId = BuildConfig.APPLICATION_ID
+            Log.d(TAG, "Running application ID: $appId")
+
+            if (appId != "com.zerofuel.music.dev") {
+                Log.d(TAG, "Production app detected. Kill switch skipped.")
                 return@withContext Status(true, "")
             }
 
@@ -34,43 +40,61 @@ object BetaKillSwitch {
                 Context.MODE_PRIVATE
             )
 
+            var connection: HttpURLConnection? = null
+
             try {
-                val connection = URL(CONFIG_URL).openConnection()
-                    as HttpURLConnection
+                val url = URL("$CONFIG_URL?nocache=${System.currentTimeMillis()}")
 
-                connection.connectTimeout = 5000
-                connection.readTimeout = 5000
+                connection = url.openConnection() as HttpURLConnection
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
                 connection.requestMethod = "GET"
+                connection.useCaches = false
+                connection.setRequestProperty("Cache-Control", "no-cache")
 
-                try {
-                    val config = connection.inputStream
-                        .bufferedReader()
-                        .use { it.readText() }
+                val responseCode = connection.responseCode
 
-                    val json = JSONObject(config)
+                Log.d(TAG, "GitHub HTTP response: $responseCode")
 
-                    val enabled = json.optBoolean("beta_enabled", true)
-                    val message = json.optString(
-                        "beta_message",
-                        "This beta version is currently unavailable."
-                    )
-
-                    prefs.edit()
-                        .putBoolean(KEY_ENABLED, enabled)
-                        .putString(KEY_MESSAGE, message)
-                        .apply()
-
-                    Status(enabled, message)
-                } finally {
-                    connection.disconnect()
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    throw Exception("HTTP error: $responseCode")
                 }
 
-            } catch (_: Exception) {
-                // Use the last successfully received status if offline.
+                val config = connection.inputStream
+                    .bufferedReader()
+                    .use { it.readText() }
+
+                Log.d(TAG, "Received config: $config")
+
+                val json = JSONObject(config)
+
+                val enabled = json.optBoolean("beta_enabled", true)
+
+                val message = json.optString(
+                    "beta_message",
+                    "This beta version is currently unavailable."
+                )
+
+                prefs.edit()
+                    .putBoolean(KEY_ENABLED, enabled)
+                    .putString(KEY_MESSAGE, message)
+                    .apply()
+
+                Log.d(TAG, "Final beta enabled status: $enabled")
+
+                Status(enabled, message)
+
+            } catch (e: Exception) {
+
+                Log.e(TAG, "Kill switch check failed", e)
+
                 Status(
                     prefs.getBoolean(KEY_ENABLED, true),
                     prefs.getString(KEY_MESSAGE, "") ?: ""
                 )
+
+            } finally {
+                connection?.disconnect()
             }
         }
 }
