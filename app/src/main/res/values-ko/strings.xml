@@ -1226,7 +1226,6 @@
     <string name="song_info_additional_vocals">추가 보컬</string>
     <string name="song_info_sample">샘플</string>
     <string name="footer_github">GitHub</string>
-    <string name="footer_developer">개발자</string>
     <string name="wear_os_section">Wear OS용 ZeroFuel</string>
     <string name="wear_os_page_title">Wear OS</string>
     <string name="wear_os_your_watches">내 시계</string>

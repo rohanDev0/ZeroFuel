@@ -2050,7 +2050,7 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.14f),
                             shape = RoundedCornerShape(percent = 50),
                         )
-                        .clickable { context.openLink("") }
+                        .clickable { context.openLink("https://google.com/") }
                         .padding(horizontal = 14.dp, vertical = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically,
