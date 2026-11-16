@@ -2089,15 +2089,6 @@ fun SettingsScreen(
                         },
                     )
                     Text(
-                        text = stringResource(R.string.footer_developer),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable {
-                            context.openLink("https://github.com/")
-                        },
-                    )
-                    Text(
                         text = "Discord",
                         style = MaterialTheme.typography.labelSmall,
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
