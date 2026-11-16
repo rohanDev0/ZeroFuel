@@ -406,7 +406,35 @@ class MainActivity : AppCompatActivity() {
         // Likewise for a link tapped or shared from another app — see [MusicLink].
         MusicLink.consume(intent)
         setContent {
+            if (betaStatus == null) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+} else if (betaStatus?.enabled == false) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = betaStatus?.message
+                ?: "This beta version is currently unavailable.",
+            textAlign = TextAlign.Center
+        )
+    }
+} else {
             val theme by AppSettings.themeMode.collectAsStateWithLifecycle()
+            var betaStatus by remember {
+             mutableStateOf<BetaKillSwitch.Status?>(null)
+}
+
+LaunchedEffect(Unit) {
+    betaStatus = BetaKillSwitch.check(this@MainActivity)
+}
             val appFont by AppSettings.appFont.collectAsStateWithLifecycle()
             val accentColor by AppSettings.accentColor.collectAsStateWithLifecycle()
             val highPerformance by AppSettings.highPerformanceMode.collectAsStateWithLifecycle()
@@ -521,6 +549,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 }
             }
+        }
         }
     }
 
