@@ -106,7 +106,7 @@ class TrackAnalyzer(private val context: Context, private val cache: AudioCache)
     }
 
     private val modelBaseUrl =
-        "https://github.com/rezapranata089-bit/ZeroFuel/raw/main/app/src/main/assets/"
+        "https://github.com/rohanDev0/ZeroFuel/raw/main/app/src/main/assets/"
 
     @Volatile
     private var modelDownloadFailedAt = 0L

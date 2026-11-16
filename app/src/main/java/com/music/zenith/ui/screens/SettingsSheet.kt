@@ -2050,7 +2050,7 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.14f),
                             shape = RoundedCornerShape(percent = 50),
                         )
-                        .clickable { context.openLink("https://saweria.co/Zeuxxi") }
+                        .clickable { context.openLink("") }
                         .padding(horizontal = 14.dp, vertical = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -2061,11 +2061,7 @@ fun SettingsScreen(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(14.dp),
                     )
-                    Text(
-                        text = "Support ZeroFuel",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    
                 }
             }
             Column(
@@ -2089,7 +2085,7 @@ fun SettingsScreen(
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("https://github.com/rezapranata089-bit/ZeroFuel")
+                            context.openLink("https://github.com/")
                         },
                     )
                     Text(
@@ -2098,30 +2094,21 @@ fun SettingsScreen(
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("https://github.com/rezapranata089-bit")
+                            context.openLink("https://github.com/")
                         },
                     )
                     Text(
-                        text = "Reddit",
+                        text = "Discord",
                         style = MaterialTheme.typography.labelSmall,
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("https://www.reddit.com/r/ZeroFuelMusic/s/gN6chb7onR")
-                        },
-                    )
-                    Text(
-                        text = "Telegram",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable {
-                            context.openLink("https://t.me/+8ECIhA8_kdkwZWU1")
+                            context.openLink("")
                         },
                     )
                 }
                 Text(
-                    text = "Made by Zeuxxi",
+                    text = "Made by Rohan",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 1.dp),

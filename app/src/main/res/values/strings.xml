@@ -1471,7 +1471,6 @@
     <string name="song_info_sample">Sample</string>
     <!-- Settings: ZeroFuel for Wear OS -->
     <string name="footer_github">GitHub</string>
-    <string name="footer_developer">Developer</string>
     <string name="wear_os_section">ZeroFuel for Wear OS</string>
     <string name="wear_os_page_title">Wear OS</string>
     <string name="wear_os_your_watches">Your watches</string>
