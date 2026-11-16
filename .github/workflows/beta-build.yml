@@ -2,15 +2,15 @@ name: ZeroFuel Beta Build
 
 on:
   workflow_dispatch:
-  inputs: 
-  version_name:
-  description: "Beta version"
-  required: true
-  default: "1.0.0"
-  version_code:
-  description: "Version_code"
-  required: true
-  default: "1"
+   inputs: 
+    version_name:
+     description: "Beta version"
+     required: true
+     default: "1.0.0"
+    version_code:
+     description: "Version_code"
+     required: true
+     default: "1"
 
 permissions:
   contents: read
