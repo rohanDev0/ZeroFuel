@@ -15,8 +15,8 @@ import android.content.pm.PackageManager
  * names so a choice made before the update stays enabled.
  */
 enum class AppIcon(val alias: String, val iconRes: Int, val labelRes: Int, val previewRes: Int? = null) {
-    Default("LauncherDefault", R.mipmap.ic_launcher, R.string.app_icon_default),
-    LiquidGlass("LauncherGlassLight", R.mipmap.ic_liquid_glass, R.string.app_icon_liquid_glass);
+    IceCool("LauncherDefault", R.mipmap.ic_launcher, R.string.app_icon_default),
+    SunsetDawn("LauncherGlassLight", R.mipmap.ic_liquid_glass, R.string.app_icon_liquid_glass);
 
     private fun component(context: Context) =
         ComponentName(context.packageName, "com.music.zenith.$alias")
@@ -24,8 +24,8 @@ enum class AppIcon(val alias: String, val iconRes: Int, val labelRes: Int, val p
     companion object {
         /**
          * Icons that were removed leave no alias to enable. If one of them was
-         * the pick and Default had been switched off, no launcher entry would be
-         * left on the home screen: bring Default back.
+         * the pick and Ice Cool had been switched off, no launcher entry would be
+         * left on the home screen: bring Ice Cool back.
          */
         fun repairLauncher(context: Context) {
             val pm = context.packageManager
@@ -33,12 +33,12 @@ enum class AppIcon(val alias: String, val iconRes: Int, val labelRes: Int, val p
                 pm.getComponentEnabledSetting(it.component(context)) ==
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             }
-            val defaultOff = pm.getComponentEnabledSetting(Default.component(context)) in setOf(
+            val defaultOff = pm.getComponentEnabledSetting(IceCool.component(context)) in setOf(
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED,
             )
-            if (!anyEnabled && defaultOff) apply(context, Default)
+            if (!anyEnabled && defaultOff) apply(context, IceCool)
         }
 
         fun current(context: Context): AppIcon {
@@ -46,7 +46,7 @@ enum class AppIcon(val alias: String, val iconRes: Int, val labelRes: Int, val p
             return entries.firstOrNull {
                 pm.getComponentEnabledSetting(it.component(context)) ==
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            } ?: Default
+            } ?: IceCool
         }
 
         /** Enables [icon] before disabling the rest so there is never a moment with no launcher entry. */
