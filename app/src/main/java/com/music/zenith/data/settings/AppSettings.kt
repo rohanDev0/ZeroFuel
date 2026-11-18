@@ -734,7 +734,7 @@ object AppSettings {
     val showListenTogetherButton = MutableStateFlow(false)
 
     /** Show a Listen Together tab in the bottom navigation bar, before Search. */
-    val showListenTogetherTab = MutableStateFlow(true)
+    val showListenTogetherTab = MutableStateFlow(false)
 
     /** Search sebagai lingkaran terpisah di glass nav bar; mati = Search jadi tab keempat di dalam pil. */
     val searchTabSeparate = MutableStateFlow(false)
@@ -746,7 +746,7 @@ object AppSettings {
     val coverSlideAnimation = MutableStateFlow(true)
 
     /** Efek cover "cair" (morph shader AGSL) menggantikan sapuan geser; hanya aktif di API 33+ dan bila [coverSlideAnimation] hidup. */
-    val coverFluidAnimation = MutableStateFlow(false)
+    val coverFluidAnimation = MutableStateFlow(true)
 
     /**
      * Efek penuh (cair/geser) hanya menyala saat Automix atau crossfade berjalan.
