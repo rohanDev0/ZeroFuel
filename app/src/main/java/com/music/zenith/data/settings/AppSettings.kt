@@ -1489,7 +1489,7 @@ object AppSettings {
         }.getOrDefault(AppFont.DEFAULT)
         accentColor.value = runCatching {
             AccentColor.valueOf(prefs.getString(KEY_ACCENT_COLOR, null) ?: AccentColor.RED.name)
-        }.getOrDefault(AccentColor.RED)
+        }.getOrDefault(AccentColor.TEAL)
         autoplay.value = prefs.getBoolean(KEY_AUTOPLAY, true)
         shuffleEnabled.value = prefs.getBoolean(KEY_SHUFFLE_ENABLED, false)
         repeatMode.value = prefs.getInt(KEY_REPEAT_MODE, Player.REPEAT_MODE_OFF)
