@@ -2050,7 +2050,7 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.14f),
                             shape = RoundedCornerShape(percent = 50),
                         )
-                        .clickable { context.openLink("https://google.com/") }
+                        .clickable { context.openLink("") }
                         .padding(horizontal = 14.dp, vertical = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -2078,15 +2078,6 @@ fun SettingsScreen(
                         text = "ZeroFuel $version",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Text(
-                        text = stringResource(R.string.footer_github),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable {
-                            context.openLink("https://github.com/")
-                        },
                     )
                     Text(
                         text = "Discord",
