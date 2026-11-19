@@ -716,7 +716,7 @@ object AppSettings {
     val playbackTempo = MutableStateFlow(1.0f)
     val themeMode = MutableStateFlow(ThemeMode.DARK)
     val appFont = MutableStateFlow(AppFont.DEFAULT)
-    val accentColor = MutableStateFlow(AccentColor.RED)
+    val accentColor = MutableStateFlow(AccentColor.TEAL)
 
     /** Keep playing similar music once the queue runs out. */
     val autoplay = MutableStateFlow(true)
@@ -772,7 +772,7 @@ object AppSettings {
     val stopOnTaskRemoved = MutableStateFlow(true)
 
     /** Hides the volume slider on the main player, leaving the rest of the layout to reflow. */
-    val hideVolumeBar = MutableStateFlow(false)
+    val hideVolumeBar = MutableStateFlow(true)
 
     /** Hides the device status bar (clock, battery, notifications) while the main player is open. */
     val hideStatusBarInPlayer = MutableStateFlow(false)
@@ -810,7 +810,7 @@ object AppSettings {
     val hideHomeMoods = MutableStateFlow(false)
 
     /** Shows every music video as a square, see [VideoThumbnails]. */
-    val squareVideoCovers = MutableStateFlow(true)
+    val squareVideoCovers = MutableStateFlow(false)
 
     /** Never plays the music video in the player: a video track shows its cover instead. */
     val stillVideoCovers = MutableStateFlow(false)
@@ -1387,7 +1387,7 @@ object AppSettings {
             .putBoolean(KEY_SWIPE_TO_PLAY_NEXT, true)
             .putBoolean(KEY_DONT_REPEAT_SUGGESTIONS, true)
             .putBoolean(KEY_LIQUID_GLASS, Build.VERSION.SDK_INT >= 31 && !lowRam)
-            .putBoolean(KEY_FULL_BLEED_ARTWORK, false)
+            .putBoolean(KEY_FULL_BLEED_ARTWORK, true)
             .putBoolean(KEY_PRIORITIZE_SYLLABLE_SYNC, true)
             .putBoolean(KEY_SHOW_CACHE_FOLDER, true)
             .putString(KEY_LOCAL_MUSIC_SORT, "DATE_ADDED")
@@ -1407,7 +1407,7 @@ object AppSettings {
             )
             .putString(KEY_TRANSLATION_LANGUAGE, language)
             .putString(KEY_THEME, "DARK")
-            .putString(KEY_ACCENT_COLOR, "RED")
+            .putString(KEY_ACCENT_COLOR, "TEAL")
             .putString(KEY_APP_FONT, "DEFAULT")
             .putBoolean(KEY_HIGH_PERFORMANCE_MODE, false)
             .putBoolean(KEY_REDUCE_ANIMATION, lowRam)
@@ -1488,7 +1488,7 @@ object AppSettings {
             AppFont.valueOf(prefs.getString(KEY_APP_FONT, null) ?: AppFont.DEFAULT.name)
         }.getOrDefault(AppFont.DEFAULT)
         accentColor.value = runCatching {
-            AccentColor.valueOf(prefs.getString(KEY_ACCENT_COLOR, null) ?: AccentColor.RED.name)
+            AccentColor.valueOf(prefs.getString(KEY_ACCENT_COLOR, null) ?: AccentColor.TEAL.name)
         }.getOrDefault(AccentColor.TEAL)
         autoplay.value = prefs.getBoolean(KEY_AUTOPLAY, true)
         shuffleEnabled.value = prefs.getBoolean(KEY_SHUFFLE_ENABLED, false)
@@ -1507,7 +1507,7 @@ object AppSettings {
             prefs.getInt(KEY_PERFORMANCE_REFRESH_RATE, DEFAULT_PERFORMANCE_REFRESH_RATE),
         )
         stopOnTaskRemoved.value = prefs.getBoolean(KEY_STOP_ON_TASK_REMOVED, true)
-        hideVolumeBar.value = prefs.getBoolean(KEY_HIDE_VOLUME_BAR, false)
+        hideVolumeBar.value = prefs.getBoolean(KEY_HIDE_VOLUME_BAR, true)
         hideStatusBarInPlayer.value = prefs.getBoolean(KEY_HIDE_STATUS_BAR_IN_PLAYER, false)
         hideSongStatus.value = prefs.getBoolean(KEY_HIDE_SONG_STATUS, false)
         showQueueHistory.value = prefs.getBoolean(KEY_SHOW_QUEUE_HISTORY, false)
@@ -1520,7 +1520,7 @@ object AppSettings {
         hideHomeVideos.value = prefs.getBoolean(KEY_HIDE_HOME_VIDEOS, false)
         hideHomeTopPicks.value = prefs.getBoolean(KEY_HIDE_HOME_TOP_PICKS, false)
         hideHomeMoods.value = prefs.getBoolean(KEY_HIDE_HOME_MOODS, false)
-        squareVideoCovers.value = prefs.getBoolean(KEY_SQUARE_VIDEO_COVERS, true)
+        squareVideoCovers.value = prefs.getBoolean(KEY_SQUARE_VIDEO_COVERS, false)
         VideoThumbnails.square = squareVideoCovers.value
         stillVideoCovers.value = prefs.getBoolean(KEY_STILL_VIDEO_COVERS, false)
         homeLayout.value = HomeLayout.decode(prefs.getString(KEY_HOME_LAYOUT, null))
