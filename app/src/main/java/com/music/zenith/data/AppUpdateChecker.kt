@@ -134,52 +134,68 @@ object AppUpdateChecker {
      * download.
      */
     suspend fun downloadApk(context: Context): Unit = withContext(Dispatchers.IO) {
-        val info = _available.value ?: return@withContext
-        val url = info.apkUrl ?: return@withContext
-        downloadCancelled = false
-        _download.value = DownloadState.Downloading(0f)
+    val info = _available.value ?: return@withContext
 
-        runCatching {
-            val dir = File(context.cacheDir, CACHE_SUBDIR).apply { mkdirs() }
-            // Drop anything left over from an earlier attempt.
-            dir.listFiles()?.forEach { it.delete() }
-            val target = File(dir, "zenith-${info.version}.apk")
+    val url = info.apkUrl
+    if (url.isNullOrBlank()) {
+        _download.value = DownloadState.Failed(
+            "No compatible ZeroFuel APK was found. Please retry when an update is available."
+        )
+        return@withContext
+    }
 
-            val request = Request.Builder().url(url).build()
-            Http.client.newCall(request).execute().use { response ->
-                check(response.isSuccessful) { "Download failed: HTTP ${response.code}" }
-                val body = response.body ?: error("Empty download body")
-                val total = body.contentLength().takeIf { it > 0 }
+    downloadCancelled = false
+    _download.value = DownloadState.Downloading(0f)
 
-                body.byteStream().use { input ->
-                    target.outputStream().use { output ->
-                        val buffer = ByteArray(64 * 1024)
-                        var readTotal = 0L
-                        while (true) {
-                            if (downloadCancelled) {
-                                _download.value = DownloadState.Idle
-                                return@withContext
-                            }
-                            val read = input.read(buffer)
-                            if (read == -1) break
-                            output.write(buffer, 0, read)
-                            readTotal += read
-                            total?.let {
-                                _download.value =
-                                    DownloadState.Downloading((readTotal.toFloat() / it).coerceIn(0f, 1f))
-                            }
+    runCatching {
+        val dir = File(context.cacheDir, CACHE_SUBDIR).apply { mkdirs() }
+        dir.listFiles()?.forEach { it.delete() }
+
+        val target = File(dir, "zerofuel-${info.version}.apk")
+
+        val request = Request.Builder().url(url).build()
+
+        Http.client.newCall(request).execute().use { response ->
+            check(response.isSuccessful) {
+                "Download failed: HTTP ${response.code}"
+            }
+
+            val body = response.body ?: error("Empty download body")
+            val total = body.contentLength().takeIf { it > 0 }
+
+            body.byteStream().use { input ->
+                target.outputStream().use { output ->
+                    val buffer = ByteArray(64 * 1024)
+                    var readTotal = 0L
+
+                    while (true) {
+                        val read = input.read(buffer)
+                        if (read == -1) break
+
+                        output.write(buffer, 0, read)
+                        readTotal += read
+
+                        total?.let {
+                            _download.value = DownloadState.Downloading(
+                                (readTotal.toFloat() / it).coerceIn(0f, 1f)
+                            )
                         }
                     }
                 }
             }
-            _download.value = DownloadState.Ready(target)
-        }.onFailure { error ->
-            _download.value = if (downloadCancelled) {
-                DownloadState.Idle
-            } else {
-                DownloadState.Failed(error.message ?: "Download failed")
-            }
         }
+
+        check(target.exists() && target.length() > 0) {
+            "Downloaded APK is empty or invalid."
+        }
+
+        _download.value = DownloadState.Ready(target)
+
+    }.onFailure { error ->
+        _download.value = DownloadState.Failed(
+            error.message ?: "Download failed. Please try again."
+        )
+    }
     }
 
     /** Stops an in-flight download; the next read loop sees this and bails. */

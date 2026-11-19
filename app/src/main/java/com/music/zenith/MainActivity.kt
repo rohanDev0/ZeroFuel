@@ -417,6 +417,11 @@ class MainActivity : AppCompatActivity() {
 
     LaunchedEffect(Unit) {
         betaStatus = BetaKillSwitch.check(this@MainActivity)
+        betaStatus = if (!beta.enabled) {
+            beta
+        } else {
+            ProductionKillSwitch.check(this@MainActivity)
+        }
     }
 
     if (betaStatus == null) {
@@ -3071,7 +3076,7 @@ private fun ZeroFuelApp(
         val replayDrawable = replay.summary?.isEmpty == false
         BackHandler(enabled = replayDrawable && replayStory != null && !showReplayShare) { replayStory = null }
         BackHandler(enabled = replayDrawable && showReplayShare) { showReplayShare = false }
-        BackHandler(enabled = showUpdateDialog) { showUpdateDialog = false }
+        BackHandler(enabled = showUpdateDialog && onboardingComplete) }
         BackHandler(enabled = showListenBrainzLogin) { showListenBrainzLogin = false }
         BackHandler(enabled = showLastfmLogin) { showLastfmLogin = false }
         BackHandler(enabled = discordDialog != null) { discordDialog = null }
@@ -6008,26 +6013,14 @@ private fun ZeroFuelApp(
                     // A download in progress keeps running behind the closed
                     // sheet — only the sheet itself goes away. The top bar's
                     // update icon reopens it onto whatever state it reached.
-                    onDismiss = { showUpdateDialog = false },
-                    onDownload = {
-                        if (update.apkUrl != null) {
-                            scope.launch { AppUpdateChecker.downloadApk(context) }
-                        } else {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(update.releaseUrl)))
-                            showUpdateDialog = false
+                    onDownload = { 
+                        scope.launch {
+                            AppUpdateChecker.downloadApk(context)
                         }
-                    },
-                    onCancelDownload = {
-                        AppUpdateChecker.cancelDownload()
                     },
                     onInstall = {
                         val ready = AppUpdateChecker.download.value as? AppUpdateChecker.DownloadState.Ready
                         ready?.let { AppUpdateChecker.installApk(context, it.file) }
-                    },
-                    onOpenReleasePage = {
-                        AppUpdateChecker.resetDownload()
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(update.releaseUrl)))
-                        showUpdateDialog = false
                     },
                 )
             }
