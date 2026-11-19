@@ -122,7 +122,7 @@ import com.music.zenith.ui.components.LINE_FADE
 import com.music.zenith.ui.graphics.fadingEdges
 import com.music.zenith.ui.haptics.Haptic
 import com.music.zenith.ui.haptics.rememberHaptics
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.music.zenith.data.NerdStats
 import com.music.zenith.data.listentogether.PartyMember
@@ -671,7 +671,7 @@ internal fun PlayerActionRow(
                     .offset { IntOffset((closeIn.toPx() * compactness.value).roundToInt(), 0) },
             ) {
                 BottomGlyph(
-                    icon = ZenithIcons.LyricsQuote,
+                    icon = ZeroFuelIcons.LyricsQuote,
                     contentDescription = stringResource(if (lyricsOpen) Res.string.close_lyrics else Res.string.open_lyrics),
                     // Lyrics and the queue are two things to show in one place, so
                     // opening either closes the other; lit to say which is up.
@@ -717,7 +717,7 @@ internal fun PlayerActionRow(
                         },
                 ) {
                     BottomGlyph(
-                        icon = ZenithIcons.Queue,
+                        icon = ZeroFuelIcons.Queue,
                         contentDescription = stringResource(Res.string.up_next),
                         onClick = onToggleQueue,
                         highlighted = queueOpen,
@@ -740,7 +740,7 @@ internal fun PlayerActionRow(
 /**
  * Plain glyph button (no disc, like Apple Music) used for the track menu and
  * the like control. The filled star carries the liked state as a shape —
- * see [ZenithIcons.StarFilled].
+ * see [ZeroFuelIcons.StarFilled].
  */
 @Composable
 internal fun CircleGlyph(
@@ -1327,9 +1327,9 @@ private fun QueueModeBadges(
         // Only one badge at a time. Priority: repeat-one, then shuffle,
         // then repeat-all.
         val badgeIcon = when {
-            repeatMode == RepeatModes.ONE -> ZenithIcons.RepeatOne
-            shuffleEnabled -> ZenithIcons.Shuffle
-            repeatMode != RepeatModes.OFF -> ZenithIcons.Repeat
+            repeatMode == RepeatModes.ONE -> ZeroFuelIcons.RepeatOne
+            shuffleEnabled -> ZeroFuelIcons.Shuffle
+            repeatMode != RepeatModes.OFF -> ZeroFuelIcons.Repeat
             else -> null
         }
         if (badgeIcon != null) {

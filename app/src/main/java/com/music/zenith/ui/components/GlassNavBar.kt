@@ -2,7 +2,7 @@
  * The bar's structure and its inline/expanded behaviour are
  * EchoMusicApp/Echo-Music's AppFloatingNavBar + FloatingMiniPlayer (GPL-3.0),
  * over the FloatingTabBar vendored in [com.music.zenith.ui.components.floatingtabbar].
- * Zenith's own tabs, song model, transport and haptics are wired through it in
+ * ZeroFuel's own tabs, song model, transport and haptics are wired through it in
  * place of Echo's Screens routing and PlayerConnection.
  */
 @file:OptIn(ExperimentalSharedTransitionApi::class)
@@ -148,7 +148,7 @@ val haptics = rememberHaptics()
     val currentOnTabSelected by rememberUpdatedState(onTabSelected)
 
     // Search is the odd one out in the iOS 26 layout: a circle of its own beside
-    // the pill rather than a quarter of it. It is the last tab in Zenith's
+    // the pill rather than a quarter of it. It is the last tab in ZeroFuel's
     // order, which is where the shape wants it anyway.
     val standaloneIndex = if (searchSeparate) tabs.lastIndex else -1
 

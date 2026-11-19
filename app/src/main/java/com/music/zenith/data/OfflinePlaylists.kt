@@ -215,7 +215,7 @@ object OfflinePlaylists {
                 )
             }
         }.getOrElse {
-            DebugLog.w("Zenith", "Offline playlists unreadable: ${it.message}")
+            DebugLog.w("ZeroFuel", "Offline playlists unreadable: ${it.message}")
             emptyList()
         }
     }
@@ -234,7 +234,7 @@ object OfflinePlaylists {
                 )
             }
             prefs.edit().putString(KEY_PLAYLISTS, array.toString()).apply()
-        }.onFailure { DebugLog.w("Zenith", "Offline playlists not saved: ${it.message}") }
+        }.onFailure { DebugLog.w("ZeroFuel", "Offline playlists not saved: ${it.message}") }
     }
 
     private fun Song.toJson(): JSONObject = JSONObject().apply {

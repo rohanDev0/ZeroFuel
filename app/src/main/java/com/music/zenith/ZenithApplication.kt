@@ -48,7 +48,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
-class ZenithApplication : Application(), SingletonImageLoader.Factory, Configuration.Provider {
+class ZeroFuelApplication : Application(), SingletonImageLoader.Factory, Configuration.Provider {
 
     /** Asked for on first use rather than at launch; see [PlaylistSync.init]. */
     override val workManagerConfiguration: Configuration
@@ -222,7 +222,7 @@ class ZenithApplication : Application(), SingletonImageLoader.Factory, Configura
                     chain.request().newBuilder()
                         .header(
                             "User-Agent",
-                            "Zenith/${BuildConfig.VERSION_NAME} (Android; +https://github.com/kushagrasinghx/BitChord)",
+                            "ZeroFuel/${BuildConfig.VERSION_NAME} (Android; +https://github.com/kushagrasinghx/BitChord)",
                         )
                         .build(),
                 )

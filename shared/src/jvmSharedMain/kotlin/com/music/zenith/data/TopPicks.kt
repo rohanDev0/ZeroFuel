@@ -43,7 +43,7 @@ import kotlin.random.Random
  */
 object TopPicks {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     /** How many artists get a page fetched — and so a card. */
     private const val ARTISTS = 3

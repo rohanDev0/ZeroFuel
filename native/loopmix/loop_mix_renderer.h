@@ -1,4 +1,4 @@
-// Zenith: the Automix loop mix's renderer. Two decks, each a decoded region
+// ZeroFuel: the Automix loop mix's renderer. Two decks, each a decoded region
 // of one song played through Signalsmith Stretch, looped on whole bars and
 // following a tempo ramp beat by beat, mixed into one stereo stream.
 //
@@ -9,7 +9,7 @@
 // outgoing player's audio sink, so the start of the mix is sample-exact
 // against the song it takes over from, and the two decks can't drift apart.
 //
-// Copyright (C) 2026 Kushagra Singh. GPL-3.0-or-later, with the rest of Zenith.
+// Copyright (C) 2026 Kushagra Singh. GPL-3.0-or-later, with the rest of ZeroFuel.
 #pragma once
 
 #include <atomic>

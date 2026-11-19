@@ -106,7 +106,7 @@ class TrackAnalyzer(private val context: Context, private val cache: AudioCache)
     }
 
     private val modelBaseUrl =
-        "https://github.com/rezapranata089-bit/Zenith/raw/main/app/src/main/assets/"
+        "https://github.com/rohanDev0/ZeroFuel/raw/main/app/src/main/assets/"
 
     @Volatile
     private var modelDownloadFailedAt = 0L
@@ -1671,7 +1671,7 @@ class TrackAnalyzer(private val context: Context, private val cache: AudioCache)
     }
 
     private companion object {
-        const val TAG = "ZenithTrackAnalyzer"
+        const val TAG = "ZeroFuelTrackAnalyzer"
 
         /**
          * What an unmeasured instant reads as. Below the policy's VOCAL_ACTIVE_THRESHOLD by

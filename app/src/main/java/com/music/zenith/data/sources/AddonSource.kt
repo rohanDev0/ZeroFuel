@@ -335,7 +335,7 @@ class AddonSource(
         if (answer.isEncrypted) {
             TrackLog.w(
                 TAG,
-                "${config.displayName}: $trackId came back encrypted, which Zenith never asked for — passing",
+                "${config.displayName}: $trackId came back encrypted, which ZeroFuel never asked for — passing",
             )
             return null
         }
@@ -431,7 +431,7 @@ class AddonSource(
     }
 
     private companion object {
-        const val TAG = "Zenith"
+        const val TAG = "ZeroFuel"
 
         /** What a gated addon's health says, for the editor's Test line. The sources list draws its own. */
         const val NEEDS_LOSSLESS_OUTPUT =

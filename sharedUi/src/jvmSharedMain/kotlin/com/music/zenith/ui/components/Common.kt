@@ -64,7 +64,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -654,7 +654,7 @@ private fun QueueSwipeLabel(playNext: Boolean, swipeState: SwipeToDismissBoxStat
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = if (playNext) ZenithIcons.PlayNext else ZenithIcons.PlayLast,
+                imageVector = if (playNext) ZeroFuelIcons.PlayNext else ZeroFuelIcons.PlayLast,
                 contentDescription = null,
                 tint = iconTint,
                 modifier = Modifier.size(18.dp),

@@ -163,7 +163,7 @@ val SFProDisplay = FontFamily(
  * nothing for semibold titles at 18 to 24. The large titles had nothing to
  * measure against and follow the same trend.
  */
-private val ZenithTypography = Typography(
+private val ZeroFuelTypography = Typography(
     displayLarge = TextStyle(fontWeight = FontWeight.W800, fontSize = 34.sp, letterSpacing = (-0.5).sp),
     headlineLarge = TextStyle(fontWeight = FontWeight.W800, fontSize = 30.sp, letterSpacing = (-0.4).sp),
     headlineMedium = TextStyle(fontWeight = FontWeight.W700, fontSize = 22.sp, letterSpacing = (-0.25).sp),
@@ -222,7 +222,7 @@ private fun Typography.withFamily(family: FontFamily) = Typography(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ZenithTheme(
+fun ZeroFuelTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     font: AppFont = AppFont.DEFAULT,
     accent: AccentColor = AccentColor.RED,
@@ -240,7 +240,7 @@ fun ZenithTheme(
     MaterialTheme(
         colorScheme = scheme,
         typography = when (font) {
-            AppFont.DEFAULT -> ZenithTypography
+            AppFont.DEFAULT -> ZeroFuelTypography
             AppFont.LEGACY -> LegacyTypography
         },
         shapes = AppleShapes,

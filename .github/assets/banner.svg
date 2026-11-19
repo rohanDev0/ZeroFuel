@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" role="img" aria-label="Zenith, a YouTube Music player for Android with an Apple Music-style interface">
-  <title>Zenith</title>
-  <desc>Animated banner: a drifting liquid mesh gradient behind the Zenith glass icon, with a Dynamic Island style now playing pill.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" role="img" aria-label="ZeroFuel, a YouTube Music player for Android with an Apple Music-style interface">
+  <title>ZeroFuel</title>
+  <desc>Animated banner: a drifting liquid mesh gradient behind the ZeroFuel glass icon, with a Dynamic Island style now playing pill.</desc>
   <defs>
     <clipPath id="card"><rect width="960" height="540" rx="28"/></clipPath>
     <clipPath id="iconClip"><rect width="1024" height="1024" rx="230"/></clipPath>
@@ -135,7 +135,7 @@
 
     <!-- Title + tagline -->
     <g filter="url(#textShadow)" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" text-anchor="middle">
-      <text x="480" y="352" font-size="78" font-weight="700" letter-spacing="-1.5" fill="url(#title)">Zenith</text>
+      <text x="480" y="352" font-size="78" font-weight="700" letter-spacing="-1.5" fill="url(#title)">ZeroFuel</text>
       <text x="480" y="394" font-size="27" font-weight="500" fill="#FFFFFF" fill-opacity="0.88">A YouTube Music player for Android</text>
       <text x="480" y="427" font-size="27" font-weight="500" fill="#FFFFFF" fill-opacity="0.88">with an Apple Music–style interface</text>
     </g>

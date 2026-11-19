@@ -663,7 +663,7 @@ private fun StoryChrome(
             )
             Spacer(Modifier.width(3.dp))
             Text(
-                text = "Zenith",
+                text = "ZeroFuel",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.W700,
                 color = Color.White.copy(alpha = 0.92f),
@@ -2339,7 +2339,7 @@ private fun CaptureBrand(label: String) {
         )
         Spacer(Modifier.width(3.dp))
         Text(
-            text = "Zenith",
+            text = "ZeroFuel",
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.W700,
             color = Color.White.copy(alpha = 0.92f),

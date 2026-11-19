@@ -62,7 +62,7 @@ import com.music.zenith.data.model.ShelfItem
 import com.music.zenith.data.model.UiState
 import com.music.zenith.data.settings.LibrarySort
 import com.music.zenith.ui.AppUi
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.components.LIBRARY_GRID_SPACING
 import com.music.zenith.ui.components.MessageState
 import com.music.zenith.ui.components.PAGE_GUTTER
@@ -391,7 +391,7 @@ private fun LibraryLinkList(links: List<LibraryLink>, onClick: (ShelfItem) -> Un
                     modifier = Modifier.weight(1f),
                 )
                 Icon(
-                    imageVector = ZenithIcons.ChevronRight,
+                    imageVector = ZeroFuelIcons.ChevronRight,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f),
                     modifier = Modifier.size(20.dp),
@@ -435,7 +435,7 @@ private fun PlaylistShelf(
         leadingCards = buildList<@Composable (Modifier) -> Unit> {
             add { m ->
                 NewShelfCard(
-                    icon = ZenithIcons.Plus,
+                    icon = ZeroFuelIcons.Plus,
                     label = stringResource(Res.string.new_playlist),
                     subtitle = stringResource(Res.string.saved_to_youtube_music),
                     onClick = onNewPlaylist,
@@ -445,7 +445,7 @@ private fun PlaylistShelf(
             if (onImportSpotifyPlaylist != null) {
                 add { m ->
                     NewShelfCard(
-                        icon = ZenithIcons.Download,
+                        icon = ZeroFuelIcons.Download,
                         label = stringResource(Res.string.import_spotify),
                         subtitle = stringResource(Res.string.import_spotify_subtitle),
                         onClick = onImportSpotifyPlaylist,
@@ -515,7 +515,7 @@ internal fun LibraryGridShelf(
 @Composable
 private fun ArtistsLayoutToggle(row: Boolean, onChange: (Boolean) -> Unit) {
     Icon(
-        imageVector = if (row) ZenithIcons.GridView else ZenithIcons.ListView,
+        imageVector = if (row) ZeroFuelIcons.GridView else ZeroFuelIcons.ListView,
         contentDescription = null,
         tint = MaterialTheme.colorScheme.primary,
         modifier = Modifier
@@ -744,7 +744,7 @@ fun LibraryGridPage(
             if (onNewPlaylist != null) {
                 item(key = "leading") {
                     NewShelfCard(
-                        icon = ZenithIcons.Plus,
+                        icon = ZeroFuelIcons.Plus,
                         label = stringResource(Res.string.new_playlist),
                         subtitle = stringResource(Res.string.saved_to_youtube_music),
                         onClick = onNewPlaylist,

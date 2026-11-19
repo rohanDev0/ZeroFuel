@@ -159,7 +159,7 @@ import com.music.zenith.data.lyrics.translationLanguageName
 import com.music.zenith.ui.haptics.Haptic
 import com.music.zenith.ui.haptics.Haptics
 import com.music.zenith.ui.haptics.rememberHaptics
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.rememberIsForeground
 import java.util.Locale
 import kotlin.math.PI
@@ -3457,7 +3457,7 @@ private fun CurrentLyricLine(
                 .padding(vertical = 4.dp),
         ) {
             Icon(
-                imageVector = ZenithIcons.Instrumental,
+                imageVector = ZeroFuelIcons.Instrumental,
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
@@ -3473,7 +3473,7 @@ private fun CurrentLyricLine(
             )
             Spacer(Modifier.width(6.dp))
             Icon(
-                imageVector = ZenithIcons.ChevronRight,
+                imageVector = ZeroFuelIcons.ChevronRight,
                 contentDescription = null,
                 tint = Color.White.copy(alpha = 0.5f),
                 modifier = Modifier.size(14.dp),
@@ -3530,7 +3530,7 @@ private fun CurrentLyricLine(
     ) {
         if (instrumental) {
             Icon(
-                imageVector = ZenithIcons.Instrumental,
+                imageVector = ZeroFuelIcons.Instrumental,
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(16.dp),
@@ -3612,7 +3612,7 @@ private fun CurrentLyricLine(
             Spacer(Modifier.width(6.dp))
             // Disclosure hint: this strip opens the full lyrics screen.
             Icon(
-                imageVector = ZenithIcons.ChevronRight,
+                imageVector = ZeroFuelIcons.ChevronRight,
                 contentDescription = null,
                 tint = Color.White.copy(alpha = 0.5f),
                 modifier = Modifier.size(14.dp),
@@ -3620,7 +3620,7 @@ private fun CurrentLyricLine(
         } else {
             Spacer(Modifier.width(6.dp))
             Icon(
-                imageVector = ZenithIcons.ChevronRight,
+                imageVector = ZeroFuelIcons.ChevronRight,
                 contentDescription = null,
                 tint = Color.White.copy(alpha = 0.5f),
                 modifier = Modifier

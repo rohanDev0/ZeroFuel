@@ -2,6 +2,15 @@ name: ZeroFuel Beta Build
 
 on:
   workflow_dispatch:
+   inputs: 
+    version_name:
+     description: "Beta version"
+     required: true
+     default: "1.0.0"
+    version_code:
+     description: "Version_code"
+     required: true
+     default: "1"
 
 permissions:
   contents: read
@@ -48,7 +57,10 @@ jobs:
       - name: Build Beta APK
         run: |
           chmod +x gradlew
-          ./gradlew :app:assembleDevDebug --stacktrace
+          ./gradlew :app:assembleDevDebug \
+            -Pversion_name="${{ inputs.version_name }}" \
+            -Pversion_code="${{ inputs.version_code }}" \
+            --stacktrace
 
       - name: Upload Beta APK
         uses: actions/upload-artifact@v4

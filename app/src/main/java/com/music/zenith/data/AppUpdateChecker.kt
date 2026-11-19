@@ -20,7 +20,7 @@ import okhttp3.Request
 import java.io.File
 
 /**
- * Zenith ships as a sideloaded APK off GitHub Releases rather than through
+ * ZeroFuel ships as a sideloaded APK off GitHub Releases rather than through
  * a store, so there's nothing to push an update notice on its own — this
  * polls the repo's "latest release" once per launch and compares its tag
  * against the running build.
@@ -98,11 +98,11 @@ object AppUpdateChecker {
      * One release carries the phone app and the TV app, each as a universal
      * APK plus per-ABI splits:
      *
-     *     Zenith-v1.8.apk     Zenith-v1.8_arm64-v8a.apk     ...
-     *     ZenithTV-v1.8.apk   ZenithTV-v1.8_arm64-v8a.apk   ...
+     *     ZeroFuel-v1.8.apk     ZeroFuel-v1.8_arm64-v8a.apk     ...
+     *     ZeroFuelTV-v1.8.apk   ZeroFuelTV-v1.8_arm64-v8a.apk   ...
      *
      * so this app's APKs are the ones named with its own
-     * [BuildConfig.UPDATE_APK_PREFIX] — "Zenith-" never matches a TV file,
+     * [BuildConfig.UPDATE_APK_PREFIX] — "ZeroFuel-" never matches a TV file,
      * since the prefix ends at the hyphen. The universal build (no `_ABI`
      * suffix) is taken first, as it installs anywhere; failing that, the split
      * for this device's ABI. A release with neither leaves

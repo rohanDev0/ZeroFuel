@@ -29,7 +29,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -143,7 +143,7 @@ internal fun DoubleTapLikeBurst(
         },
     ) {
         Icon(
-            imageVector = ZenithIcons.StarFilled,
+            imageVector = ZeroFuelIcons.StarFilled,
             contentDescription = null,
             tint = Color.White,
             modifier = Modifier

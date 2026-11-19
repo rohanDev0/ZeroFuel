@@ -1,6 +1,6 @@
-// Zenith: the Automix loop mix's renderer. See loop_mix_renderer.h.
+// ZeroFuel: the Automix loop mix's renderer. See loop_mix_renderer.h.
 //
-// Copyright (C) 2026 Kushagra Singh. GPL-3.0-or-later, with the rest of Zenith.
+// Copyright (C) 2026 Kushagra Singh. GPL-3.0-or-later, with the rest of ZeroFuel.
 #include "loopmix/loop_mix_renderer.h"
 
 #include <algorithm>

@@ -33,7 +33,7 @@ internal fun redactModuleUrl(url: String): String =
  * Fetches a module index, downloads and loads module JS, and calls the
  * module's exported search/stream functions.
  *
- * Ported from Convx's `ModuleManager`, adapted to use Zenith's shared
+ * Ported from Convx's `ModuleManager`, adapted to use ZeroFuel's shared
  * [Http.client] OkHttp instance rather than a separate Ktor client.
  *
  * One instance should be held per [ModuleSource] config so that loaded
@@ -385,7 +385,7 @@ class ModuleManager {
     }
 
     private companion object {
-        const val TAG = "Zenith"
+        const val TAG = "ZeroFuel"
 
         /**
          * How long a fetched index is trusted. Long enough that a run of

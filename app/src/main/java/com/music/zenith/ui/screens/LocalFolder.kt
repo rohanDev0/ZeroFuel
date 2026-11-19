@@ -90,7 +90,7 @@ import com.music.zenith.ui.components.SongRow
 import com.music.zenith.ui.components.longPressMenuClickable
 import com.music.zenith.ui.components.rememberRemoteArtworkUrl
 import com.music.zenith.ui.components.thumbnailBorder
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.theme.ArtworkPalette
 
 /**
@@ -437,7 +437,7 @@ private fun NewPlaylistRow(palette: ArtworkPalette, onClick: () -> Unit) {
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                ZenithIcons.Plus,
+                ZeroFuelIcons.Plus,
                 contentDescription = null,
                 tint = palette.accent,
                 modifier = Modifier.size(22.dp),
@@ -799,7 +799,7 @@ private fun GroupLabels(title: String, subtitle: String, palette: ArtworkPalette
 @Composable
 private fun TrailingGlyph(selected: Boolean, palette: ArtworkPalette) {
     Icon(
-        imageVector = if (selected) Icons.Rounded.CheckCircle else ZenithIcons.ChevronRight,
+        imageVector = if (selected) Icons.Rounded.CheckCircle else ZeroFuelIcons.ChevronRight,
         contentDescription = if (selected) stringResource(R.string.selected) else null,
         tint = if (selected) MaterialTheme.colorScheme.primary else palette.onBackgroundVariant,
         modifier = Modifier.size(if (selected) 22.dp else 16.dp),

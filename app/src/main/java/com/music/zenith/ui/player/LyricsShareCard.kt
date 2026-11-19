@@ -143,7 +143,7 @@ internal suspend fun renderLyricsShareCard(
     val brand = type.heading(36f, 0xB3FFFFFF.toInt())
     val brandBaseline = panelBottom + 88f
     // The mark is drawn at the word's own cap height and sits on its baseline,
-    // so the Z and "Zenith" read as one lockup.
+    // so the Z and "ZeroFuel" read as one lockup.
     val capBounds = android.graphics.Rect().also { brand.getTextBounds("Z", 0, 1, it) }
     val logoH = capBounds.height().toFloat()
     val logoW = logoH * LOGO_ASPECT

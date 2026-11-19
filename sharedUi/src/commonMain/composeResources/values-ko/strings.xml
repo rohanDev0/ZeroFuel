@@ -201,7 +201,7 @@
     <string name="sign_in_youtube_music">YouTube Music에 로그인</string>
     <string name="subscriptions">구독</string>
     <string name="your_replay">나의 리플레이</string>
-    <string name="default_replay_holder">Zenith 리스너</string>
+    <string name="default_replay_holder">ZeroFuel 리스너</string>
     <string name="import_spotify">Spotify 가져오기</string>
     <string name="import_spotify_subtitle">재생목록 링크에서</string>
     <string name="sign_in_with_google">Google로 로그인</string>

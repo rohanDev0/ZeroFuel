@@ -67,7 +67,7 @@ class LocalArtKeyer : Keyer<LocalArt> {
 /**
  * Reads the picture the file itself carries — the tag's embedded cover — and
  * only then asks MediaStore for what it made of it. Registered in
- * [ZenithApplication][com.music.zenith.ZenithApplication]; anything that is
+ * [ZeroFuelApplication][com.music.zenith.ZeroFuelApplication]; anything that is
  * not a local-art URL falls straight through to Coil's own fetchers.
  */
 class LocalArtFetcher private constructor(

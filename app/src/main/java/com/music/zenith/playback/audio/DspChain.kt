@@ -8,7 +8,7 @@ import com.music.zenith.playback.SpatialAudioProcessor
 import com.music.zenith.playback.TransitionFilterProcessor
 
 /**
- * Composite DSP chain executing Zenith's custom audio processors in their canonical sequence:
+ * Composite DSP chain executing ZeroFuel's custom audio processors in their canonical sequence:
  *
  * AudioBlock(Float32) -> SpatialAudioProcessor -> EqualizerProcessor
  *   -> TransitionFilterProcessor -> LoudnessProcessor -> AudioBlock(Float32)

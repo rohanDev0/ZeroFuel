@@ -596,7 +596,7 @@ class CastPlayback(
         }
 
     companion object {
-        private const val TAG = "ZenithCast"
+        private const val TAG = "ZeroFuelCast"
         private const val KEY_MEDIA_ID = "mediaId"
 
         /** Tracks kept queued on the receiver after the playing one. */

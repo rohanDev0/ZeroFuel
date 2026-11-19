@@ -102,7 +102,7 @@ data class SourceConfig(
  */
 object SourceRegistry {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     private lateinit var prefs: SharedPreferences
 

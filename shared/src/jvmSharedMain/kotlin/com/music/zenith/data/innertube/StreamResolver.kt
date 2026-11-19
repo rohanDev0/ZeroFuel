@@ -63,7 +63,7 @@ object StreamResolver {
     var maxKbps: () -> Int = { Int.MAX_VALUE }
 
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     /** Past this, an extractor fetch is worth flagging rather than just noting. */
     private const val SLOW_FETCH_MS = 2000L

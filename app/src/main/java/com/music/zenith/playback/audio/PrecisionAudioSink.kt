@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 
 /**
  * Precision audio sink intercepting decoder PCM buffers before Media3's internal
- * processing pipeline can bypass Zenith's custom DSP chain.
+ * processing pipeline can bypass ZeroFuel's custom DSP chain.
  *
  * Architecture:
  * - In Precision Mode (for all supported linear PCM sources):

@@ -659,7 +659,7 @@ fun SettingsScreen(
                 //
                 // Greyed rather than hidden where the device can't decode E-AC-3.
                 // A missing row reads as a feature the app doesn't have; a disabled
-                // one with a reason under it is the difference between "Zenith
+                // one with a reason under it is the difference between "ZeroFuel
                 // has no Atmos" and "this phone has no Dolby decoder", and only the
                 // second is true. The stored preference is left untouched either
                 // way — see [AppSettings.dolbyAtmos].
@@ -731,7 +731,7 @@ fun SettingsScreen(
                     title = exportDownloadsTitle,
                     checked = exportDownloads,
                     onCheckedChange = AppSettings::setExportDownloads,
-                    subtitle = (LocalMediaRepository.selectedFolderLabel(downloadFolderUri) ?: "Music/Zenith")
+                    subtitle = (LocalMediaRepository.selectedFolderLabel(downloadFolderUri) ?: "Music/ZeroFuel")
                         .takeIf { exportDownloads },
                 )
             }
@@ -754,7 +754,7 @@ fun SettingsScreen(
                     SettingsRow(
                         icon = SfIcons.LibraryMusic,
                         title = useDefaultDownloadFolderTitle,
-                        subtitle = "Music/Zenith",
+                        subtitle = "Music/ZeroFuel",
                         onClick = {
                             releaseFolderGrant(downloadFolderUri, AppSettings.localMusicFolderUri.value)
                             AppSettings.setDownloadFolderUri("")
@@ -1042,7 +1042,7 @@ fun SettingsScreen(
                 }
             }
             // The system panel is not listed here as well. A device with a
-            // Dolby or Dirac panel has something Zenith cannot reproduce and
+            // Dolby or Dirac panel has something ZeroFuel cannot reproduce and
             // keeps its row — but one level in, at the foot of the equaliser
             // screen, rather than as a second equaliser entry alongside ours.
             val equalizerTitle = stringResource(R.string.equalizer)
@@ -2050,7 +2050,7 @@ fun SettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.14f),
                             shape = RoundedCornerShape(percent = 50),
                         )
-                        .clickable { context.openLink("https://saweria.co/Zeuxxi") }
+                        .clickable { context.openLink("") }
                         .padding(horizontal = 14.dp, vertical = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -2061,11 +2061,7 @@ fun SettingsScreen(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(14.dp),
                     )
-                    Text(
-                        text = "Support Zenith",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    
                 }
             }
             Column(
@@ -2079,49 +2075,22 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Zenith $version",
+                        text = "ZeroFuel $version",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = stringResource(R.string.footer_github),
+                        text = "Discord",
                         style = MaterialTheme.typography.labelSmall,
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("https://github.com/rezapranata089-bit/Zenith")
-                        },
-                    )
-                    Text(
-                        text = stringResource(R.string.footer_developer),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable {
-                            context.openLink("https://github.com/rezapranata089-bit")
-                        },
-                    )
-                    Text(
-                        text = "Reddit",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable {
-                            context.openLink("https://www.reddit.com/r/ZenithMusic/s/gN6chb7onR")
-                        },
-                    )
-                    Text(
-                        text = "Telegram",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable {
-                            context.openLink("https://t.me/+8ECIhA8_kdkwZWU1")
+                            context.openLink("")
                         },
                     )
                 }
                 Text(
-                    text = "Made by Zeuxxi",
+                    text = "Made by Rohan",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 1.dp),

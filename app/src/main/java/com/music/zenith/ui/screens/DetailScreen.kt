@@ -212,7 +212,7 @@ import com.music.zenith.ui.components.topBarContentPadding
 import com.music.zenith.ui.components.trackColumnWidth
 import com.music.zenith.ui.haptics.Haptic
 import com.music.zenith.ui.haptics.rememberHaptics
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.player.CanvasArtworkPlayer
 import com.music.zenith.ui.theme.ArtworkPalette
 import com.music.zenith.ui.theme.rememberArtworkPalette
@@ -1299,7 +1299,7 @@ private fun ReleaseHeader(
                     // greyed-out plus would only promise one. Apple Music's
                     // own pair for that case: Play and Shuffle, side by side.
                     ActionPill(
-                        icon = ZenithIcons.Play,
+                        icon = ZeroFuelIcons.Play,
                         label = stringResource(R.string.play),
                         onClick = onPlay,
                         filled = true,
@@ -1307,7 +1307,7 @@ private fun ReleaseHeader(
                         modifier = Modifier.weight(1f),
                     )
                     ActionPill(
-                        icon = ZenithIcons.Shuffle,
+                        icon = ZeroFuelIcons.Shuffle,
                         label = stringResource(R.string.shuffle),
                         onClick = onShuffle,
                         filled = false,
@@ -1327,14 +1327,14 @@ private fun ReleaseHeader(
                     return@Row
                 }
                 CircleIconButton(
-                    icon = ZenithIcons.Shuffle,
+                    icon = ZeroFuelIcons.Shuffle,
                     contentDescription = stringResource(R.string.shuffle),
                     onClick = onShuffle,
                     haptic = Haptic.Resume,
                     size = RELEASE_SIDE_BUTTON,
                 )
                 ActionPill(
-                    icon = ZenithIcons.Play,
+                    icon = ZeroFuelIcons.Play,
                     label = stringResource(R.string.play),
                     onClick = onPlay,
                     filled = true,
@@ -1345,7 +1345,7 @@ private fun ReleaseHeader(
                     CircleIconButton(
                         // A tick, not a filled-in plus: the pair reads as
                         // "not yet / done", which is what the state is.
-                        icon = if (library.saved) ZenithIcons.Check else ZenithIcons.Plus,
+                        icon = if (library.saved) ZeroFuelIcons.Check else ZeroFuelIcons.Plus,
                         contentDescription = if (library.saved) {
                             stringResource(R.string.remove_from_library)
                         } else {
@@ -1364,7 +1364,7 @@ private fun ReleaseHeader(
         if (onAddSongs != null) {
             Spacer(Modifier.height(if (songs.isEmpty()) 18.dp else 10.dp))
             ActionPill(
-                icon = ZenithIcons.Plus,
+                icon = ZeroFuelIcons.Plus,
                 label = stringResource(R.string.playlist_add_songs),
                 onClick = onAddSongs,
                 filled = songs.isEmpty(),
@@ -1429,7 +1429,7 @@ private fun DetailSearchField(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector = ZenithIcons.Search,
+            imageVector = ZeroFuelIcons.Search,
             contentDescription = null,
             tint = palette.onBackgroundVariant,
             modifier = Modifier.size(18.dp),
@@ -1885,7 +1885,7 @@ private fun ActionRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CircleIconButton(
-            icon = ZenithIcons.Shuffle,
+            icon = ZeroFuelIcons.Shuffle,
             contentDescription = stringResource(R.string.shuffle),
             onClick = onShuffle,
             haptic = Haptic.Resume,
@@ -3841,7 +3841,7 @@ private fun DetailPage.placeholderIcon(): ImageVector = deviceFolderIcon(browseI
     LocalGroups.isDirectory(browseId) -> Icons.Rounded.Folder
     type == BrowseType.ALBUM -> Icons.Rounded.Album
     type == BrowseType.PLAYLIST -> Icons.AutoMirrored.Rounded.QueueMusic
-    else -> ZenithIcons.MusicNote
+    else -> ZeroFuelIcons.MusicNote
 }
 
 /** "10 tracks" → "10 Tracks", "playlist" → "Playlist". */

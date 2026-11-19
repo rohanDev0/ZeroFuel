@@ -95,7 +95,7 @@ import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Storage
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.data.YtMusicRepository
 import coil3.compose.AsyncImage
 import com.music.zenith.data.model.CARD_ART_PX
@@ -389,7 +389,7 @@ private fun SpeedDialBadge(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = ZenithIcons.ChevronRight,
+            imageVector = ZeroFuelIcons.ChevronRight,
             contentDescription = null,
             tint = Color.White,
             modifier = Modifier.size(12.dp),
@@ -1840,7 +1840,7 @@ internal fun ShelfCard(
                         blurRadius = 24.dp,
                     )
                     Icon(
-                        imageVector = ZenithIcons.Download,
+                        imageVector = ZeroFuelIcons.Download,
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(40.dp),
@@ -1900,7 +1900,7 @@ internal fun ShelfCard(
         ) {
             if (isPinned) {
                 Icon(
-                    imageVector = ZenithIcons.Pin,
+                    imageVector = ZeroFuelIcons.Pin,
                     contentDescription = stringResource(Res.string.pinned),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(14.dp),

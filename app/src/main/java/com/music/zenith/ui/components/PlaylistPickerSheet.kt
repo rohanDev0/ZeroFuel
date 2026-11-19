@@ -99,7 +99,7 @@ import com.music.zenith.data.model.Song
 import com.music.zenith.data.model.UserPlaylist
 import com.music.zenith.data.model.artworkAt
 import com.music.zenith.ui.components.thumbnailBorder
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import java.util.Locale
 import kotlinx.coroutines.launch
 
@@ -357,7 +357,7 @@ private fun NewPlaylistRow(onClick: () -> Unit) {
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = ZenithIcons.Plus,
+                imageVector = ZeroFuelIcons.Plus,
                 contentDescription = null,
                 tint = primary,
                 modifier = Modifier.size(26.dp),

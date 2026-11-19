@@ -162,7 +162,7 @@ Hapus baris lagu ganda; tombol mode langsung di bawah header
 Queue ala Apple Music: tombol shuffle/repeat/autoplay di bawah lagu
 Kartu preview playlist dipakai untuk semua shelf playlist
 Shelf Artists di Library jadi grid 2 kolom
-Rename BitChord ke Zenith
+Rename BitChord ke ZeroFuel
 Tambah script rename_zenith.py untuk ganti nama bitchord jadi zenith
 Tambah kartu playlist dengan preview 3 lagu di Home
 Hanya shelf Playlists yang jadi baris geser ke samping
@@ -195,7 +195,7 @@ Jelly tetap bergoyang saat menu panjang digulir (scroll)
 Ringankan hero Most Played & Liked Music: mosaic direkam sekali, tile digeser di fase draw
 Perbaiki jelly & indikator menu: hit-test dan deteksi scroll pakai koordinat host
 Cover lirik/queue ikut panel saat drag ke mini player
-Folder download jadi Music/Zenith
+Folder download jadi Music/ZeroFuel
 Lebar panel mini player melebar bertahap saat buka/tutup
 Jelly di semua popup menu + batasi tarikan scroll menu
 Menu popup: efek jelly saat digeser dan indikator highlight yang mengikuti jari
@@ -212,7 +212,7 @@ Hapus icon launcher tak terpakai dan string selain Indonesia dan Inggris
 Border card Top Picks lebih halus di mode gelap
 Most Played: mosaic animasi terbang utuh ke halaman tujuan, foot blur, panel khusus
 Samakan radius cover halaman detail dengan card Top Pick di tab Home (20dp)
-Ikon LiquidGlass jadi Zenith merah kaca, sisakan Default dan LiquidGlass
+Ikon LiquidGlass jadi ZeroFuel merah kaca, sisakan Default dan LiquidGlass
 Card Most Played (cover mosaik Liked Music) di posisi 2
 Listen again jadi baris kartu ala Apple Music, Find Your Mood dipindah
 Pill segmented control tampil di atas rim saat ditarik
@@ -220,7 +220,7 @@ Reset cache Top Picks agar slot 2 selalu card cover gambar
 Top Picks: kartu nomor 2 selalu yang punya gambar cover
 Avatar top bar tetap muncul saat offline dan avatar Together lebih tajam
 Skeleton Explore: tambah shelf editorial sebelum grid mood
-Ganti teks BitChord jadi Zenith di seluruh UI
+Ganti teks BitChord jadi ZeroFuel di seluruh UI
 Card Replay: teks diperkecil dan bagian bawah tidak terpotong
 Cache aman: invalidasi saat aksi tulis, TTL lebih pendek
 Cache disk lirik, lookup artis Apple, dan saran pencarian
@@ -336,7 +336,7 @@ Rapatkan jarak progres dan tombol pada cover non-full-bleed
 Judul dan artis slide sesuai arah saat lagu pindah (big player dan semua mini player)
 Kartu Mood di Top Picks membuka daftar Find Your Mood
 Kartu Top Picks membuka halamannya dulu, tidak langsung memutar musik
-Ganti footer Settings bitchord dan tautan menjadi Zenith versi dan kredit pembuat
+Ganti footer Settings bitchord dan tautan menjadi ZeroFuel versi dan kredit pembuat
 Perbesar judul section Home (Recents, Top Picks for You, dll) mendekati gaya Apple Music
 Tambah label di atas tiap card Top Picks (New Release, Made for You, Listen Again)
 Fade frame canvas ke thumbnail saat big ke mini baru terjadi di akhir, setelah cover mengecil di posisi mini
@@ -355,7 +355,7 @@ Turunkan baris tombol play mendekati tombol bawah
 Samakan ukuran layout player dengan Apple Music
 Hapus fitur Wear OS (WearBridge, WatchInstaller, dependensi ADB/wearable)
 Ganti applicationId menjadi com.zeux.zenith
-Rename aplikasi BitChord menjadi Zenith
+Rename aplikasi BitChord menjadi ZeroFuel
 Canvas aktif selalu full screen walau full-bleed cover dimatikan
 Lagu tipe video tanpa canvas tidak full screen cover
 Lirik: tombol kembali ke baris aktif, scroll pegas, stagger lebih fluid, mode baca tanpa sinkron

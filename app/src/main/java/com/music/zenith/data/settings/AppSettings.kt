@@ -220,7 +220,7 @@ enum class GlassPreset(
     val darkIndicator: GlassIndicator,
     val frosted: Boolean = false,
 ) {
-    /** Tampilan bawaan Zenith. */
+    /** Tampilan bawaan ZeroFuel. */
     DEFAULT(
         level = 0.13f,
         custom = GlassCustom(
@@ -317,7 +317,7 @@ enum class BitPerfectMode {
     OFF,
 
     /**
-     * Zenith's own USB Audio Class driver on libusb: any Android version,
+     * ZeroFuel's own USB Audio Class driver on libusb: any Android version,
      * volume set on the DAC itself. Requires USB permission.
      */
     USB_DIRECT,
@@ -577,7 +577,7 @@ object AppSettings {
     val bitPerfectMode = MutableStateFlow(BitPerfectMode.OFF)
 
     /**
-     * Lets direct USB play to a DAC with no volume control Zenith can set:
+     * Lets direct USB play to a DAC with no volume control ZeroFuel can set:
      * full scale, with the DAC's own knob (if any) the only volume. Off unless
      * the listener accepts a second warning.
      */
@@ -604,7 +604,7 @@ object AppSettings {
      * normalizes by default for the same reason.
      *
      * The case against it is that a constant gain is still a multiplication,
-     * so this is the first thing in Zenith that is *on* out of the box and
+     * so this is the first thing in ZeroFuel that is *on* out of the box and
      * alters samples. Rather than hide that, the Audio Pipeline readout names
      * it: its Bit-exact row reports the first stage in the chain that is
      * altering samples, and switching this off is the first thing a listener
@@ -716,7 +716,7 @@ object AppSettings {
     val playbackTempo = MutableStateFlow(1.0f)
     val themeMode = MutableStateFlow(ThemeMode.DARK)
     val appFont = MutableStateFlow(AppFont.DEFAULT)
-    val accentColor = MutableStateFlow(AccentColor.RED)
+    val accentColor = MutableStateFlow(AccentColor.TEAL)
 
     /** Keep playing similar music once the queue runs out. */
     val autoplay = MutableStateFlow(true)
@@ -734,7 +734,7 @@ object AppSettings {
     val showListenTogetherButton = MutableStateFlow(false)
 
     /** Show a Listen Together tab in the bottom navigation bar, before Search. */
-    val showListenTogetherTab = MutableStateFlow(true)
+    val showListenTogetherTab = MutableStateFlow(false)
 
     /** Search sebagai lingkaran terpisah di glass nav bar; mati = Search jadi tab keempat di dalam pil. */
     val searchTabSeparate = MutableStateFlow(false)
@@ -746,7 +746,7 @@ object AppSettings {
     val coverSlideAnimation = MutableStateFlow(true)
 
     /** Efek cover "cair" (morph shader AGSL) menggantikan sapuan geser; hanya aktif di API 33+ dan bila [coverSlideAnimation] hidup. */
-    val coverFluidAnimation = MutableStateFlow(false)
+    val coverFluidAnimation = MutableStateFlow(true)
 
     /**
      * Efek penuh (cair/geser) hanya menyala saat Automix atau crossfade berjalan.
@@ -772,7 +772,7 @@ object AppSettings {
     val stopOnTaskRemoved = MutableStateFlow(true)
 
     /** Hides the volume slider on the main player, leaving the rest of the layout to reflow. */
-    val hideVolumeBar = MutableStateFlow(false)
+    val hideVolumeBar = MutableStateFlow(true)
 
     /** Hides the device status bar (clock, battery, notifications) while the main player is open. */
     val hideStatusBarInPlayer = MutableStateFlow(false)
@@ -810,7 +810,7 @@ object AppSettings {
     val hideHomeMoods = MutableStateFlow(false)
 
     /** Shows every music video as a square, see [VideoThumbnails]. */
-    val squareVideoCovers = MutableStateFlow(true)
+    val squareVideoCovers = MutableStateFlow(false)
 
     /** Never plays the music video in the player: a video track shows its cover instead. */
     val stillVideoCovers = MutableStateFlow(false)
@@ -1265,7 +1265,7 @@ object AppSettings {
 
     /**
      * A temporary cap on [effectiveAudioQuality], for as long as something other
-     * than this phone's own speaker is playing — the Zenith watch app, whose
+     * than this phone's own speaker is playing — the ZeroFuel watch app, whose
      * audio goes over a Bluetooth link that cannot keep up with lossless. Never
      * persisted, never shown: the listener's own settings are untouched, and
      * apply again the moment the phone takes the music back.
@@ -1387,7 +1387,7 @@ object AppSettings {
             .putBoolean(KEY_SWIPE_TO_PLAY_NEXT, true)
             .putBoolean(KEY_DONT_REPEAT_SUGGESTIONS, true)
             .putBoolean(KEY_LIQUID_GLASS, Build.VERSION.SDK_INT >= 31 && !lowRam)
-            .putBoolean(KEY_FULL_BLEED_ARTWORK, false)
+            .putBoolean(KEY_FULL_BLEED_ARTWORK, true)
             .putBoolean(KEY_PRIORITIZE_SYLLABLE_SYNC, true)
             .putBoolean(KEY_SHOW_CACHE_FOLDER, true)
             .putString(KEY_LOCAL_MUSIC_SORT, "DATE_ADDED")
@@ -1407,7 +1407,7 @@ object AppSettings {
             )
             .putString(KEY_TRANSLATION_LANGUAGE, language)
             .putString(KEY_THEME, "DARK")
-            .putString(KEY_ACCENT_COLOR, "RED")
+            .putString(KEY_ACCENT_COLOR, "TEAL")
             .putString(KEY_APP_FONT, "DEFAULT")
             .putBoolean(KEY_HIGH_PERFORMANCE_MODE, false)
             .putBoolean(KEY_REDUCE_ANIMATION, lowRam)
@@ -1488,8 +1488,8 @@ object AppSettings {
             AppFont.valueOf(prefs.getString(KEY_APP_FONT, null) ?: AppFont.DEFAULT.name)
         }.getOrDefault(AppFont.DEFAULT)
         accentColor.value = runCatching {
-            AccentColor.valueOf(prefs.getString(KEY_ACCENT_COLOR, null) ?: AccentColor.RED.name)
-        }.getOrDefault(AccentColor.RED)
+            AccentColor.valueOf(prefs.getString(KEY_ACCENT_COLOR, null) ?: AccentColor.TEAL.name)
+        }.getOrDefault(AccentColor.TEAL)
         autoplay.value = prefs.getBoolean(KEY_AUTOPLAY, true)
         shuffleEnabled.value = prefs.getBoolean(KEY_SHUFFLE_ENABLED, false)
         repeatMode.value = prefs.getInt(KEY_REPEAT_MODE, Player.REPEAT_MODE_OFF)
@@ -1507,7 +1507,7 @@ object AppSettings {
             prefs.getInt(KEY_PERFORMANCE_REFRESH_RATE, DEFAULT_PERFORMANCE_REFRESH_RATE),
         )
         stopOnTaskRemoved.value = prefs.getBoolean(KEY_STOP_ON_TASK_REMOVED, true)
-        hideVolumeBar.value = prefs.getBoolean(KEY_HIDE_VOLUME_BAR, false)
+        hideVolumeBar.value = prefs.getBoolean(KEY_HIDE_VOLUME_BAR, true)
         hideStatusBarInPlayer.value = prefs.getBoolean(KEY_HIDE_STATUS_BAR_IN_PLAYER, false)
         hideSongStatus.value = prefs.getBoolean(KEY_HIDE_SONG_STATUS, false)
         showQueueHistory.value = prefs.getBoolean(KEY_SHOW_QUEUE_HISTORY, false)
@@ -1520,7 +1520,7 @@ object AppSettings {
         hideHomeVideos.value = prefs.getBoolean(KEY_HIDE_HOME_VIDEOS, false)
         hideHomeTopPicks.value = prefs.getBoolean(KEY_HIDE_HOME_TOP_PICKS, false)
         hideHomeMoods.value = prefs.getBoolean(KEY_HIDE_HOME_MOODS, false)
-        squareVideoCovers.value = prefs.getBoolean(KEY_SQUARE_VIDEO_COVERS, true)
+        squareVideoCovers.value = prefs.getBoolean(KEY_SQUARE_VIDEO_COVERS, false)
         VideoThumbnails.square = squareVideoCovers.value
         stillVideoCovers.value = prefs.getBoolean(KEY_STILL_VIDEO_COVERS, false)
         homeLayout.value = HomeLayout.decode(prefs.getString(KEY_HOME_LAYOUT, null))
@@ -1686,7 +1686,7 @@ object AppSettings {
      * the very first call seeds the stored value from [currentVersionCode]
      * rather than reporting an update.
      *
-     * Zenith ships sideloaded (see [com.music.zenith.data.AppUpdateChecker]),
+     * ZeroFuel ships sideloaded (see [com.music.zenith.data.AppUpdateChecker]),
      * so installing a new APK over the old one is the only "update" there is —
      * app data, this pref included, survives it exactly like a Play Store
      * update. Call once per process start, before anything reads a cache that
@@ -2237,7 +2237,7 @@ object AppSettings {
         setFrostedGlass(preset.frosted)
     }
 
-    /** Tema berganti: kalau masih memakai preset Zenith, nilainya ikut tema baru. */
+    /** Tema berganti: kalau masih memakai preset ZeroFuel, nilainya ikut tema baru. */
     fun syncGlassPresetTheme(dark: Boolean) {
         glassDarkTheme = dark
         val preset = GlassPreset.DEFAULT

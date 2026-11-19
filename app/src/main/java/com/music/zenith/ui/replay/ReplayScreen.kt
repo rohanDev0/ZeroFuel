@@ -61,7 +61,7 @@ import com.music.zenith.data.stats.ReplayPeriod
 import com.music.zenith.data.stats.ReplaySummary
 import com.music.zenith.ui.components.GlassSegmentedControl
 import com.music.zenith.ui.components.PAGE_GUTTER
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import com.music.zenith.ui.player.MeshGradientBackground
 import com.music.zenith.ui.player.rememberArtworkColors
 import com.music.zenith.ui.theme.AccentRed
@@ -188,7 +188,7 @@ fun ReplayScreen(
                         )
                     }
                     item("open") {
-                        ReplayActionRow(ZenithIcons.Play, stringResource(R.string.play_your_replay), dark) {
+                        ReplayActionRow(ZeroFuelIcons.Play, stringResource(R.string.play_your_replay), dark) {
                             onOpenStory(ReplayStoryPage.INTRO)
                         }
                     }
@@ -448,7 +448,7 @@ private fun ReplayActionRow(icon: ImageVector, label: String, dark: Boolean, onC
             modifier = Modifier.weight(1f),
         )
         Icon(
-            imageVector = ZenithIcons.ChevronRight,
+            imageVector = ZeroFuelIcons.ChevronRight,
             contentDescription = null,
             tint = textColor.copy(alpha = 0.5f),
             modifier = Modifier.size(16.dp),
@@ -631,7 +631,7 @@ private fun EmptyReplay(period: ReplayPeriod, dark: Boolean) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            imageVector = ZenithIcons.Clock,
+            imageVector = ZeroFuelIcons.Clock,
             contentDescription = null,
             tint = emptyVariant,
             modifier = Modifier.size(44.dp),

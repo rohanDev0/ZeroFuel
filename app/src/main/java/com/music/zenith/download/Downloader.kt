@@ -47,7 +47,7 @@ import kotlin.coroutines.resumeWithException
  */
 object Downloader {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     /** Matches the range size read-ahead settled on; large enough to amortise, small enough to cancel promptly. */
     private const val CHUNK_BYTES = 2L * 1024 * 1024

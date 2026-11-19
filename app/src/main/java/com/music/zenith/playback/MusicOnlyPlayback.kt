@@ -37,7 +37,7 @@ import kotlinx.coroutines.withTimeoutOrNull
  */
 object MusicOnlyPlayback {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
 
     /** Berapa lama sebuah baris menunggu versi audionya sebelum memutar audio videonya sendiri. */
     const val ANSWER_TIMEOUT_MS = 15_000L

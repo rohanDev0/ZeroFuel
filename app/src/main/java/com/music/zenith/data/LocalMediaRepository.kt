@@ -30,7 +30,7 @@ import java.util.Locale
 
 object LocalMediaRepository {
 
-    private const val TAG = "Zenith"
+    private const val TAG = "ZeroFuel"
     private const val MIN_LOCAL_MUSIC_DURATION_MS = 30_000L
 
     // `mp4` only ever reaches this list as an audio row — MediaStore files a
@@ -264,7 +264,7 @@ object LocalMediaRepository {
     )
 
     /**
-     * Asks the media scanner about audio files sitting in Music/Zenith that
+     * Asks the media scanner about audio files sitting in Music/ZeroFuel that
      * MediaStore does not list yet, and waits briefly for it, so the listing
      * that follows includes them.
      */

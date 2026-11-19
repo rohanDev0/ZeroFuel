@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import com.music.zenith.ui.icons.ZenithIcons
+import com.music.zenith.ui.icons.ZeroFuelIcons
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -228,7 +228,7 @@ private fun ManualLyricsSearch(
             }
             Spacer(Modifier.width(8.dp))
             Icon(
-                imageVector = ZenithIcons.ChevronRight,
+                imageVector = ZeroFuelIcons.ChevronRight,
                 contentDescription = null,
                 tint = Color.White.copy(alpha = 0.5f),
                 modifier = Modifier
