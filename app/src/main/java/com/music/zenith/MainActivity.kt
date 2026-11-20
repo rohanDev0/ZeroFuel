@@ -416,7 +416,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     LaunchedEffect(Unit) {
-        betaStatus = BetaKillSwitch.check(this@MainActivity)
+        val beta = BetaKillSwitch.check(this@MainActivity)
         betaStatus = if (!beta.enabled) {
             beta
         } else {
@@ -3076,7 +3076,7 @@ private fun ZeroFuelApp(
         val replayDrawable = replay.summary?.isEmpty == false
         BackHandler(enabled = replayDrawable && replayStory != null && !showReplayShare) { replayStory = null }
         BackHandler(enabled = replayDrawable && showReplayShare) { showReplayShare = false }
-        BackHandler(enabled = showUpdateDialog && onboardingComplete) }
+        BackHandler(enabled = showUpdateDialog && onboardingComplete, onBack = {}) }
         BackHandler(enabled = showListenBrainzLogin) { showListenBrainzLogin = false }
         BackHandler(enabled = showLastfmLogin) { showLastfmLogin = false }
         BackHandler(enabled = discordDialog != null) { discordDialog = null }

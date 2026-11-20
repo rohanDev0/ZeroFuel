@@ -84,7 +84,6 @@ fun UpdateAvailableDialog(
     version: String,
     notes: String?,
     hazeState: HazeState,
-    onDismiss: () -> Unit,
     onDownload: () -> Unit,
     onInstall: () -> Unit,
     modifier: Modifier = Modifier,
@@ -97,7 +96,8 @@ fun UpdateAvailableDialog(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .macOSPopupScrim(motion, SCRIM_COLOR)
+            .macOSPopupScrim(motion, SCRIM_COLOR),
+
             // Tapping the scrim reads the same as Remind Me Later — nothing
             // about this update is mandatory, so backing out of it should be as
             // easy as getting into it. Mid-download it only closes the sheet;
