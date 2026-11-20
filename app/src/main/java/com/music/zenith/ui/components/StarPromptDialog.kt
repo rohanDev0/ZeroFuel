@@ -48,7 +48,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 
-private const val STAR_REPO_URL = "https://github.com/"
+private const val STAR_REPO_URL = "x"
 
 /**
  * When to ask for a GitHub star. GitHub can't tell the app who has already
@@ -268,7 +268,7 @@ private fun StarPromptDialog(
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = "A star on GitHub is a free way to support the project and helps others find it.",
+                text = "ZF",
                 modifier = Modifier.padding(top = 6.dp),
                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp, lineHeight = 17.sp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -276,7 +276,7 @@ private fun StarPromptDialog(
             )
         }
         AlertRule()
-        AlertAction(label = "Star on GitHub", emphasised = true, onClick = onStar)
+        AlertAction(label = "Star", emphasised = true, onClick = onStar)
         AlertRule()
         AlertAction(label = "Maybe later", emphasised = false, onClick = onLater)
     }
