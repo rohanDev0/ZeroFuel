@@ -1,4 +1,4 @@
 {
-    "production_enabled": true,
+    "production_enabled": false,
     "production_message": "Zerofuel is temporarily unavailable, please try again later."
 }
