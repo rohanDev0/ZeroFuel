@@ -84,31 +84,25 @@ fun UpdateAvailableDialog(
     version: String,
     notes: String?,
     hazeState: HazeState,
-    onDismiss: () -> Unit,
     onDownload: () -> Unit,
-    onCancelDownload: () -> Unit,
     onInstall: () -> Unit,
-    onOpenReleasePage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val reduceDynamicBlur by AppSettings.reduceDynamicBlur.collectAsStateWithLifecycle()
     val state by AppUpdateChecker.download.collectAsStateWithLifecycle()
     val shape = RoundedCornerShape(ALERT_CORNER)
-    val motion = rememberMacOSPopupState(onClosed = onDismiss)
+    val motion = rememberMacOSPopupState(onClosed = {})
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .macOSPopupScrim(motion, SCRIM_COLOR)
+            .macOSPopupScrim(motion, SCRIM_COLOR),
+
             // Tapping the scrim reads the same as Remind Me Later — nothing
             // about this update is mandatory, so backing out of it should be as
             // easy as getting into it. Mid-download it only closes the sheet;
             // the download keeps going and the top-bar icon reopens this.
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = motion::requestClose,
-            ),
+
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -234,29 +228,44 @@ fun UpdateAvailableDialog(
             }
 
             AlertRule()
-            when (state) {
-                is AppUpdateChecker.DownloadState.Downloading -> {
-                    AlertAction(label = stringResource(R.string.cancel), emphasised = false, onClick = onCancelDownload)
-                }
-                is AppUpdateChecker.DownloadState.Ready -> {
-                    AlertAction(label = stringResource(R.string.install_now), emphasised = true, onClick = onInstall)
-                    AlertRule()
-                    AlertAction(label = stringResource(R.string.later), emphasised = false, onClick = onDismiss)
-                }
-                is AppUpdateChecker.DownloadState.Failed -> {
-                    AlertAction(label = stringResource(R.string.try_again), emphasised = true, onClick = onDownload)
-                    AlertRule()
-                    AlertAction(label = stringResource(R.string.open_releases_page), emphasised = false, onClick = onOpenReleasePage)
-                }
-                else -> {
-                    AlertAction(label = stringResource(R.string.download_now), emphasised = true, onClick = onDownload)
-                    AlertRule()
-                    AlertAction(label = stringResource(R.string.remind_me_later), emphasised = false, onClick = onDismiss)
-                }
-            }
-        }
+                when (state) {
+    is AppUpdateChecker.DownloadState.Downloading -> {
+        AlertAction(
+            label = "Downloading..",
+            emphasised = true,
+            onClick = {},
+        )
+    }
+
+    is AppUpdateChecker.DownloadState.Ready -> {
+        AlertAction(
+            label = stringResource(R.string.install_now),
+            emphasised = true,
+            onClick = onInstall,
+        )
+    }
+
+    is AppUpdateChecker.DownloadState.Failed -> {
+        AlertAction(
+            label = stringResource(R.string.try_again),
+            emphasised = true,
+            onClick = onDownload,
+        )
+    }
+
+    else -> {
+        AlertAction(
+            label = stringResource(R.string.download_now),
+            emphasised = true,
+            onClick = onDownload,
+        )
     }
 }
+               
+            }
+            
+        }
+    }
 
 /**
  * Full-bleed action row. Tinted rather than filled, so the two read as equals
