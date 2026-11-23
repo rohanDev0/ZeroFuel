@@ -42,7 +42,7 @@
 
     <!-- Blue outer orbital swoosh -->
     <path
-        android:fillColor="@android:color/transparent"
+        android:fillColor="#00000000"
         android:strokeColor="#168DFF"
         android:strokeWidth="13"
         android:strokeLineCap="round"
