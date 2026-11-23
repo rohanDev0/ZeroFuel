@@ -19,7 +19,7 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.painterResource
 
 /** ZF logo viewport: 950 x 484. */
-private const val WORDMARK_ASPECT = 950f / 484f
+private const val WORDMARK_ASPECT = 730f / 484f
 
 private const val WORDMARK_INK_BOTTOM = 0.96f
 private const val WORDMARK_TEXT_LIFT = 0.03f
