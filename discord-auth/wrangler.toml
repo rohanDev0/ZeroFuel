@@ -1,0 +1,7 @@
+name = "zerofuel-discord-auth"
+main = "src/index.js"
+compatibility_date = "2026-11-24"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "YOUR_KV_NAMESPACE_ID"
