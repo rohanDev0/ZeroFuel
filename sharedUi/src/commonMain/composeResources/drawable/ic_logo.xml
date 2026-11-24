@@ -1,6 +1,57 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="35dp"
+    android:width="28dp"
     android:height="18dp"
     android:viewportWidth="950"
     android:viewportHeight="484">
+
+    <!-- Unified angular ZF monogram -->
+
+    <!-- Z -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="
+            M155,105
+            L535,105
+            L475,160
+            L295,160
+            L185,265
+            L520,265
+            L455,325
+            L75,325
+            L145,265
+            L310,160
+            L105,160
+            Z" />
+
+    <!-- F -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="
+            M535,105
+            L915,105
+            L860,160
+            L665,160
+            L615,220
+            L820,220
+            L765,280
+            L585,280
+            L500,405
+            L405,405
+            L535,220
+            Z" />
+
+    <!-- Blue outer orbital swoosh -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#168DFF"
+        android:strokeWidth="13"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="
+            M85,345
+            C5,390 5,420 85,405
+            C260,375 610,180 805,105
+            C900,70 950,85 920,145
+            C900,180 865,215 830,240" />
+
 </vector>
