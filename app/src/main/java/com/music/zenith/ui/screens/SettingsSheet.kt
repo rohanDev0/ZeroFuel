@@ -2085,12 +2085,12 @@ fun SettingsScreen(
                         color = if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) Color.Black else Color.White,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            context.openLink("")
+                            context.openLink("https://discord.gg/uMgq6fgTqk")
                         },
                     )
                 }
                 Text(
-                    text = "Made by Rohan",
+                    text = "Transformed by Rohn",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 1.dp),
