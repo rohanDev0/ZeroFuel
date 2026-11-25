@@ -239,6 +239,16 @@
                     android:host="party" />
             </intent-filter>
 
+            <!-- ZeroFuel Discord OAuth callback -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                        <category android:name="android.intent.category.BROWSABLE" />
+                            <data
+                                    android:scheme="zerofuel"
+                                            android:host="discord-auth" />
+                                            </intent-filter>
+
             <!--
               Share → ZeroFuel, from YT Music's own share sheet or from
               anywhere a link can be sent. The text is whatever the sending app

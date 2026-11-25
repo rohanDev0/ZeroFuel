@@ -1,5 +1,6 @@
 package com.music.zenith
 
+import com.music.zenith.auth.DiscordAuthLink
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -409,6 +410,7 @@ class MainActivity : AppCompatActivity() {
         JamInviteLink.consume(intent)
         // Likewise for a link tapped or shared from another app — see [MusicLink].
         MusicLink.consume(intent)
+        DiscordAuthLink.consume(intent)
         setContent {
 
     var betaStatus by remember {
@@ -619,6 +621,7 @@ class MainActivity : AppCompatActivity() {
         PlayerDeepLink.consume(intent)
         JamInviteLink.consume(intent)
         MusicLink.consume(intent)
+        DiscordAuthLink.consume(intent)
     }
 }
 
