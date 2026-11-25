@@ -2,16 +2,14 @@ package com.music.zenith.auth
 
 import android.content.Intent
 import android.net.Uri
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 object DiscordAuthLink {
 
-        private val _callbacks = MutableSharedFlow<Uri>(
-                    extraBufferCapacity = 1
-        )
+        private val callbackChannel = Channel<Uri>(Channel.BUFFERED)
 
-            val callbacks = _callbacks.asSharedFlow()
+            val callbacks = callbackChannel.receiveAsFlow()
 
                 fun consume(intent: Intent?) {
                             val uri = intent?.data ?: return
@@ -21,10 +19,10 @@ object DiscordAuthLink {
                                                                 uri.scheme == "zerofuel" &&
                                                                             uri.host == "discord-auth"
                                     ) {
-                                                    _callbacks.tryEmit(uri)
+                                                    callbackChannel.trySend(uri)
                                     }
                                 }
                             }
                                     
+                                    
                 
-        

@@ -1,5 +1,6 @@
 package com.music.zenith
 
+import com.music.zenith.auth.DiscordAuthClient
 import com.music.zenith.auth.DiscordAuthLink
 import android.Manifest
 import android.content.Intent
@@ -412,6 +413,57 @@ class MainActivity : AppCompatActivity() {
         MusicLink.consume(intent)
         DiscordAuthLink.consume(intent)
         setContent {
+
+            val authContext = LocalContext.current
+
+            LaunchedEffect(Unit) {
+                    DiscordAuthLink.callbacks.collect { callback ->
+                            try {
+                                            val response = DiscordAuthClient.exchange(
+                                                                authContext,
+                                                                                callback
+                                            )
+
+                                                        if (response.optBoolean("authorized")) {
+                                                                            val sessionToken = response.getString("sessionToken")
+                                                                                            val username = response.optString(
+                                                                                                                    "username",
+                                                                                                                                        "Discord user"
+                                                                                            )
+
+                                                                                                            authContext.getSharedPreferences(
+                                                                                                                                    "zerofuel_membership",
+                                                                                                                                                        android.content.Context.MODE_PRIVATE
+                                                                                                            ).edit()
+                                                                                                                                .putString("session_token", sessionToken)
+                                                                                                                                                    .putString("username", username)
+                                                                                                                                                                        .apply()
+
+                                                                                                                                                                                        Toast.makeText(
+                                                                                                                                                                                                                authContext,
+                                                                                                                                                                                                                                    "Membership verified: $username",
+                                                                                                                                                                                                                                                        Toast.LENGTH_LONG
+                                                                                                                                                                                        ).show()
+                                                        } else {
+                                                                            Toast.makeText(
+                                                                                                    authContext,
+                                                                                                                        "Your Discord account isn't authorized.",
+                                                                                                                                            Toast.LENGTH_LONG
+                                                                            ).show()
+                                                        }
+                                                    } catch (e: Exception) {
+                                                                    Toast.makeText(
+                                                                                        authContext,
+                                                                                                        "Discord verification failed: ${e.message}",
+                                                                                                                        Toast.LENGTH_LONG
+                                                                    ).show()
+                                                    }
+                                                }
+                                            }
+                                                        }
+                                            
+                            }}
+            
 
     var betaStatus by remember {
         mutableStateOf<BetaKillSwitch.Status?>(null)
