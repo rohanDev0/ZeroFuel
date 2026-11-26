@@ -5,6 +5,7 @@ compatibility_date = "2026-11-24"
 [vars]
 DISCORD_CLIENT_ID = "1575113326596464802"
 DISCORD_GUILD_ID = "1574355202629304322"
+DISCORD_REDIRECT_URI = "https://zerofuel-discord-auth.rohantemp9.workers.dev/auth/callback"
 APP_REDIRECT_URI = "zerofuel://discord-auth"
 
 [[kv_namespaces]]

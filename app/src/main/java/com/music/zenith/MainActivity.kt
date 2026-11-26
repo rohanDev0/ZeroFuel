@@ -1,8 +1,11 @@
 package com.music.zenith
 
-import com.music.zenith.ui.components.Discord.MembershipDialog
 import com.music.zenith.auth.DiscordAuthClient
 import com.music.zenith.auth.DiscordAuthLink
+import com.music.zenith.auth.MembershipGate
+import com.music.zenith.auth.toPendingMembershipSong
+import com.music.zenith.auth.toSong
+import com.music.zenith.ui.components.DiscordMembershipDialog
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -55,7 +58,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
@@ -416,78 +418,24 @@ class MainActivity : AppCompatActivity() {
         setContent {
 
             val authContext = LocalContext.current
-            var showDiscordMembershipDialog by remember { mutableStateOf(false) }
-            var pendingMembershipPlayback by remember { mutableStateOf<(() -> Unit)?>(null) }
+            val membershipState by MembershipGate.state.collectAsStateWithLifecycle()
+            var membershipDialogVisible by remember { mutableStateOf(false) }
 
-            if (showDiscordMembershipDialog) {
-    DiscordMembershipDialog(
-        onJoin = {
-            authContext.startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://discord.gg/uMgq6fgTqk")
-                )
-            )
-        },
-        onAuthorize = {
-            showDiscordMembershipDialog = false
-            DiscordAuthClient.start(authContext)
-        },
-        onCancel = {
-            showDiscordMembershipDialog = false
-            pendingMembershipPlayback = null
-        }
-    )
-}
+            LaunchedEffect(membershipState) {
+                if (membershipState is MembershipGate.State.Blocked) {
+                    membershipDialogVisible = true
+                } else if (membershipState is MembershipGate.State.Verified) {
+                    membershipDialogVisible = false
+                }
+            }
 
-            LaunchedEffect(Unit) {
-                    DiscordAuthLink.callbacks.collect { callback ->
-                            try {
-                                            val response = DiscordAuthClient.exchange(
-                                                                authContext,
-                                                                                callback
-                                            )
-
-                                                        if (response.optBoolean("authorized")) {
-                                                                            val sessionToken = response.getString("sessionToken")
-                                                                                            val username = response.optString(
-                                                                                                                    "username",
-                                                                                                                                        "Discord user"
-                                                                                            )
-
-                                                                                                            authContext.getSharedPreferences(
-                                                                                                                                    "zerofuel_membership",
-                                                                                                                                                        android.content.Context.MODE_PRIVATE
-                                                                                                            ).edit()
-                                                                                                                                .putString("session_token", sessionToken)
-                                                                                                                                                    .putString("username", username)
-                                                                                                                                                                        .apply()
-
-                                                                                                                                                                                        Toast.makeText(
-                                                                                                                                                                                                                authContext,
-                                                                                                                                                                                                                                    "Membership verified: $username",
-                                                                                                                                                                                                                                                        Toast.LENGTH_LONG
-                                                                                                                                                                                        ).show()
-                                                        } else {
-                                                                            Toast.makeText(
-                                                                                                    authContext,
-                                                                                                                        "Your Discord account isn't authorized.",
-                                                                                                                                            Toast.LENGTH_LONG
-                                                                            ).show()
-                                                        }
-                                                    } catch (e: Exception) {
-                                                                    Toast.makeText(
-                                                                                        authContext,
-                                                                                                        "Discord verification failed: ${e.message}",
-                                                                                                                        Toast.LENGTH_LONG
-                                                                    ).show()
-                                                    }
-                                                }
-                                            }
-                                                        }
-                                            
-                            }}
-            
+            LaunchedEffect(authContext) {
+                MembershipGate.initialize(authContext)
+                MembershipGate.refresh(authContext)
+                DiscordAuthLink.callbacks.collect { callback ->
+                    MembershipGate.handleCallback(authContext, callback)
+                }
+            }
 
     var betaStatus by remember {
         mutableStateOf<BetaKillSwitch.Status?>(null)
@@ -647,10 +595,37 @@ class MainActivity : AppCompatActivity() {
                         appBackdrop = appBackdrop,
                     )
                 }
+
+                if (membershipDialogVisible && betaStatus?.enabled == true) {
+                    DiscordMembershipDialog(
+                        state = membershipState,
+                        onJoin = {
+                            authContext.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(BuildConfig.DISCORD_INVITE_URL)
+                                )
+                            )
+                        },
+                        onAuthorize = {
+                            try {
+                                DiscordAuthClient.start(authContext)
+                                MembershipGate.markChecking()
+                            } catch (_: Exception) {
+                                MembershipGate.block("auth_failed")
+                            }
+                        },
+                        onCancel = {
+                            membershipDialogVisible = false
+                            MembershipGate.cancel(authContext)
+                        },
+                    )
+                }
                 }
             }
         }
-    
+        }
+    }
 
     /**
      * The volume keys move the DAC's own volume while direct USB output owns
@@ -698,7 +673,7 @@ class MainActivity : AppCompatActivity() {
         MusicLink.consume(intent)
         DiscordAuthLink.consume(intent)
     }
-
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1832,6 +1807,14 @@ private fun ZeroFuelApp(
         activeRadioSeed = null
         scope.launch {
             if (refusedByHost()) return@launch
+            if (!MembershipGate.ensureAuthorized(
+                    context,
+                    pending = {
+                        playFrom(allSongs, allIndex, source, boundedContext, continuationToken)
+                    },
+                    pendingSong = allSongs.getOrNull(allIndex)?.toPendingMembershipSong(),
+                )
+            ) return@launch
             val c = controller ?: return@launch
             val currentTimeline = player.queue.takeIf { it.size == c.mediaItemCount }
                 ?: (0 until c.mediaItemCount).map { c.getMediaItemAt(it).toSong() }
@@ -1944,6 +1927,12 @@ private fun ZeroFuelApp(
         activeRadioSeed = null
         scope.launch {
             if (refusedByHost()) return@launch
+            if (!MembershipGate.ensureAuthorized(
+                    context,
+                    pending = { playRadio(song, source) },
+                    pendingSong = song.toPendingMembershipSong(),
+                )
+            ) return@launch
             val c = controller ?: return@launch
             val currentTimeline = player.queue.takeIf { it.size == c.mediaItemCount }
                 ?: (0 until c.mediaItemCount).map { c.getMediaItemAt(it).toSong() }
@@ -1957,6 +1946,19 @@ private fun ZeroFuelApp(
             c.playSongs(oneOffQueue, 0)
             // Start radio in the mini-player; the user opens the full view by tapping it.
         }
+    }
+
+    // If the activity was killed during OAuth there is no captured lambda to
+    // resume, only the song identity saved before the browser opened.
+    val pendingMembershipSong by MembershipGate.pendingSong
+        .collectAsStateWithLifecycle(initialValue = null)
+    LaunchedEffect(pendingMembershipSong) {
+        val pending = pendingMembershipSong ?: return@LaunchedEffect
+        MembershipGate.consumePendingSong(context)
+        playRadio(
+            pending.toSong(),
+            QueueSource(pending.title, PlaybackSourceType.QUEUE, pending.videoId),
+        )
     }
 
     /**
@@ -1979,6 +1981,12 @@ private fun ZeroFuelApp(
                 .filterNot { it.fromAutoplay }
                 .map { it.mediaId }
             scope.launch {
+                if (!MembershipGate.ensureAuthorized(
+                        context,
+                        pending = { startRadio(song) },
+                        pendingSong = song.toPendingMembershipSong(),
+                    )
+                ) return@launch
                 val seed = song.copy(
                     radioName = song.title,
                     playbackSource = song.title,

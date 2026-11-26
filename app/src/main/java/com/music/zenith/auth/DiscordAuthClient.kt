@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Base64
+import com.music.zenith.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -12,10 +13,25 @@ import java.net.URL
 import java.security.MessageDigest
 import java.security.SecureRandom
 
-object DiscordAuthClient {
+sealed interface DiscordExchangeResult {
+    data class Success(
+        val sessionToken: String,
+        val username: String,
+        /** Epoch millis at which the offline cache must stop being trusted. */
+        val expiresAt: Long,
+    ) : DiscordExchangeResult
 
-    private const val BASE_URL =
-        "https://zerofuel-discord-auth.rohantemp9.workers.dev"
+    data object NotMember : DiscordExchangeResult
+    data class Failure(val detail: String) : DiscordExchangeResult
+}
+
+sealed interface DiscordVerifyResult {
+    data class Authorized(val username: String, val expiresAt: Long) : DiscordVerifyResult
+    data class Unauthorized(val reason: String) : DiscordVerifyResult
+    data object Unavailable : DiscordVerifyResult
+}
+
+object DiscordAuthClient {
 
     private const val PREFS = "zerofuel_discord_auth"
     private const val VERIFIER = "code_verifier"
@@ -53,7 +69,7 @@ object DiscordAuthClient {
             .putString(STATE, state)
             .apply()
 
-        val authUrl = Uri.parse("$BASE_URL/auth/discord")
+        val authUrl = Uri.parse("${BuildConfig.DISCORD_AUTH_BASE_URL}/auth/discord")
             .buildUpon()
             .appendQueryParameter("code_challenge", challenge)
             .appendQueryParameter("app_state", state)
@@ -62,98 +78,162 @@ object DiscordAuthClient {
         context.startActivity(Intent(Intent.ACTION_VIEW, authUrl))
     }
 
-    suspend fun exchange(context: Context, callback: Uri): JSONObject =
+    suspend fun exchange(context: Context, callback: Uri): DiscordExchangeResult =
         withContext(Dispatchers.IO) {
-
             val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-
             val verifier = prefs.getString(VERIFIER, null)
-                ?: throw Exception("Missing PKCE verifier")
-
             val savedState = prefs.getString(STATE, null)
-                ?: throw Exception("Missing OAuth state")
-
-            val code = callback.getQueryParameter("code")
-                ?: throw Exception("Missing authorization code")
-
-            val callbackState = callback.getQueryParameter("app_state")
-                ?: throw Exception("Missing callback state")
-
-            if (callbackState != savedState) {
-                throw Exception("OAuth state mismatch")
-            }
-
-            val body = JSONObject().apply {
-                put("code", code)
-                put("appState", savedState)
-                put("codeVerifier", verifier)
-            }
-
-            val connection = URL("$BASE_URL/auth/exchange")
-                .openConnection() as HttpURLConnection
+            var connection: HttpURLConnection? = null
+            var consumePkce = false
 
             try {
+                if (verifier.isNullOrBlank() || savedState.isNullOrBlank()) {
+                    return@withContext DiscordExchangeResult.Failure("missing_pkce")
+                }
+
+                val callbackState = callback.getQueryParameter("app_state")
+                    ?: return@withContext DiscordExchangeResult.Failure("missing_state")
+
+                if (callbackState != savedState) {
+                    return@withContext DiscordExchangeResult.Failure("state_mismatch")
+                }
+
+                // From here on the callback is ours: consume the one-time PKCE
+                // material even if the exchange later fails. A forged URI with a
+                // wrong state must not burn a login already in progress.
+                consumePkce = true
+
+                callback.getQueryParameter("error")?.let {
+                    return@withContext DiscordExchangeResult.Failure("oauth_denied")
+                }
+
+                val code = callback.getQueryParameter("code")
+                    ?: return@withContext DiscordExchangeResult.Failure("missing_code")
+
+                val body = JSONObject().apply {
+                    put("code", code)
+                    put("appState", savedState)
+                    put("codeVerifier", verifier)
+                }
+
+                connection = URL("${BuildConfig.DISCORD_AUTH_BASE_URL}/auth/exchange")
+                    .openConnection() as HttpURLConnection
                 connection.requestMethod = "POST"
                 connection.connectTimeout = 15000
                 connection.readTimeout = 15000
                 connection.doOutput = true
                 connection.setRequestProperty("Content-Type", "application/json")
-
                 connection.outputStream.use {
                     it.write(body.toString().toByteArray(Charsets.UTF_8))
                 }
 
                 val responseCode = connection.responseCode
-                val stream = if (responseCode in 200..299) {
-                    connection.inputStream
-                } else {
-                    connection.errorStream
+                val json = try {
+                    JSONObject(readBody(connection))
+                } catch (_: Exception) {
+                    return@withContext DiscordExchangeResult.Failure("bad_response")
                 }
-
-                val response = stream.bufferedReader().use { it.readText() }
-
-                prefs.edit()
-                    .remove(VERIFIER)
-                    .remove(STATE)
-                    .apply()
 
                 if (responseCode !in 200..299) {
-                    throw Exception("Authentication failed: $response")
+                    if (json.optString("reason") == "not_a_member" || responseCode == 403) {
+                        return@withContext DiscordExchangeResult.NotMember
+                    }
+                    return@withContext DiscordExchangeResult.Failure(
+                        json.optString("reason").takeIf { it.isNotBlank() }
+                            ?: json.optString("error", "http_$responseCode")
+                    )
                 }
 
-                JSONObject(response)
+                if (!json.optBoolean("authorized", false)) {
+                    if (json.optString("reason") == "not_a_member") {
+                        return@withContext DiscordExchangeResult.NotMember
+                    }
+                    return@withContext DiscordExchangeResult.Failure("not_authorized")
+                }
+
+                val token = json.optString("sessionToken")
+                if (token.isBlank()) {
+                    return@withContext DiscordExchangeResult.Failure("missing_session")
+                }
+
+                DiscordExchangeResult.Success(
+                    sessionToken = token,
+                    username = json.optString("username"),
+                    expiresAt = json.optLong("expiresAt", 0L),
+                )
+            } catch (_: Exception) {
+                DiscordExchangeResult.Failure("network_error")
             } finally {
-                connection.disconnect()
+                if (consumePkce) {
+                    prefs.edit()
+                        .remove(VERIFIER)
+                        .remove(STATE)
+                        .apply()
+                }
+                connection?.disconnect()
             }
         }
 
-    suspend fun verifySession(token: String): Boolean =
+    /**
+     * Checks the worker, which now re-checks guild membership on every call.
+     * A transport/Discord failure is deliberately distinct from a revocation:
+     * only the former may fall back to a still-valid cached session.
+     */
+    suspend fun verifySession(token: String): DiscordVerifyResult =
         withContext(Dispatchers.IO) {
-
-            val connection = URL("$BASE_URL/api/verify")
-                .openConnection() as HttpURLConnection
+            var connection: HttpURLConnection? = null
 
             try {
+                connection = URL("${BuildConfig.DISCORD_AUTH_BASE_URL}/api/verify")
+                    .openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
                 connection.connectTimeout = 10000
                 connection.readTimeout = 10000
-                connection.setRequestProperty(
-                    "Authorization",
-                    "Bearer $token"
-                )
+                connection.setRequestProperty("Authorization", "Bearer $token")
 
-                if (connection.responseCode !in 200..299) {
-                    return@withContext false
+                val responseCode = connection.responseCode
+                val json = try {
+                    JSONObject(readBody(connection))
+                } catch (_: Exception) {
+                    return@withContext DiscordVerifyResult.Unavailable
                 }
 
-                val response = connection.inputStream.bufferedReader()
-                    .use { it.readText() }
+                if (responseCode == 503) {
+                    return@withContext DiscordVerifyResult.Unavailable
+                }
 
-                JSONObject(response).optBoolean("authorized", false)
+                if (responseCode in 401..403) {
+                    return@withContext DiscordVerifyResult.Unauthorized(reasonOf(json))
+                }
+
+                if (responseCode !in 200..299) {
+                    return@withContext DiscordVerifyResult.Unavailable
+                }
+
+                if (!json.optBoolean("authorized", false)) {
+                    return@withContext DiscordVerifyResult.Unauthorized(reasonOf(json))
+                }
+
+                val username = json.optJSONObject("user")?.optString("username")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: json.optString("username")
+
+                DiscordVerifyResult.Authorized(
+                    username = username,
+                    expiresAt = json.optLong("expiresAt", 0L),
+                )
             } catch (_: Exception) {
-                false
+                DiscordVerifyResult.Unavailable
             } finally {
-                connection.disconnect()
+                connection?.disconnect()
             }
         }
+
+    private fun reasonOf(json: JSONObject): String =
+        json.optString("reason").takeIf { it.isNotBlank() } ?: "invalid_session"
+
+    private fun readBody(connection: HttpURLConnection): String {
+        val stream = connection.errorStream ?: connection.inputStream ?: return ""
+        return stream.bufferedReader().use { it.readText() }
+    }
 }

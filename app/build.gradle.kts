@@ -7,7 +7,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("org.jlleitschuh.gradle.ktlint")
 }
 
 /**
@@ -113,6 +112,11 @@ android {
         // AppUpdateChecker.apkAssetUrl.
         buildConfigField("String", "UPDATE_APK_PREFIX", "\"ZeroFuel-\"")
         buildConfigField("String", "UPDATE_REPO", "\"${updateRepo.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
+        // Membership gateway is mandatory, so these are build-time app constants
+        // rather than user settings; keeping them here avoids another URL literal
+        // in the Kotlin sources (GUIDELINES.md §4).
+        buildConfigField("String", "DISCORD_AUTH_BASE_URL", "\"https://zerofuel-discord-auth.rohantemp9.workers.dev\"")
+        buildConfigField("String", "DISCORD_INVITE_URL", "\"https://discord.gg/uMgq6fgTqk\"")
     }
 
 

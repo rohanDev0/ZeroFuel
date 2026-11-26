@@ -2,6 +2,25 @@ package com.music.zenith.auth
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONObject
+
+/** The saved Discord membership authorization, kept away from the plain prefs. */
+data class MembershipSession(
+    val token: String,
+    val username: String,
+    /** Epoch millis of the last successful online membership check. */
+    val verifiedAt: Long,
+    /** Epoch millis after which the offline cache may no longer be trusted. */
+    val expiresAt: Long,
+)
+
+/** Minimal song identity saved when a tap is interrupted by the OAuth round trip. */
+data class PendingMembershipSong(
+    val videoId: String,
+    val title: String,
+    val artist: String,
+    val thumbnailUrl: String?,
+)
 
 /**
  * Encrypted-at-rest storage for credentials.
@@ -22,6 +41,25 @@ class AuthStore(context: Context) {
 
     private val prefs: SharedPreferences =
         EncryptedPrefs.open(context, "bitchord_auth", "bitchord_auth_plain")
+
+    init {
+        // The first implementation of the gate kept its token in plain prefs.
+        // Bring it into the encrypted store once, with no trusted verification
+        // time, so the next play still has to check the server before allowing
+        // anything. The unencrypted copy is then removed whether or not it held
+        // anything useful.
+        val legacy = context.getSharedPreferences("zerofuel_membership", Context.MODE_PRIVATE)
+        val legacyToken = legacy.getString("session_token", null)
+        if (!legacyToken.isNullOrBlank() && membershipSession == null) {
+            membershipSession = MembershipSession(
+                token = legacyToken,
+                username = legacy.getString("username", null).orEmpty(),
+                verifiedAt = 0L,
+                expiresAt = 0L,
+            )
+        }
+        legacy.edit().clear().apply()
+    }
 
     var cookie: String?
         get() = prefs.getString(KEY_COOKIE, null)
@@ -102,6 +140,79 @@ class AuthStore(context: Context) {
     var discordToken: String?
         get() = prefs.getString(KEY_DISCORD_TOKEN, null)
         set(value) = prefs.edit().putString(KEY_DISCORD_TOKEN, value).apply()
+
+    /**
+     * The members-only authorization. Separate from [discordToken]: that one is
+     * the Rich Presence user token, this one is the short-lived session issued
+     * by the membership worker after a Discord server check.
+     */
+    var membershipSession: MembershipSession?
+        get() = prefs.getString(KEY_MEMBERSHIP_SESSION, null)?.let { raw ->
+            try {
+                val json = JSONObject(raw)
+                MembershipSession(
+                    token = json.getString("token"),
+                    username = json.optString("username"),
+                    verifiedAt = json.optLong("verifiedAt", 0L),
+                    expiresAt = json.optLong("expiresAt", 0L),
+                )
+            } catch (_: Exception) {
+                null
+            }
+        }
+        set(value) {
+            if (value == null) {
+                prefs.edit().remove(KEY_MEMBERSHIP_SESSION).apply()
+            } else {
+                val json = JSONObject().apply {
+                    put("token", value.token)
+                    put("username", value.username)
+                    put("verifiedAt", value.verifiedAt)
+                    put("expiresAt", value.expiresAt)
+                }
+                prefs.edit().putString(KEY_MEMBERSHIP_SESSION, json.toString()).apply()
+            }
+        }
+
+    /** The song to resume if Android kills the activity during Discord OAuth. */
+    var pendingMembershipSong: PendingMembershipSong?
+        get() = prefs.getString(KEY_PENDING_MEMBERSHIP_SONG, null)?.let { raw ->
+            try {
+                val json = JSONObject(raw)
+                PendingMembershipSong(
+                    videoId = json.getString("videoId"),
+                    title = json.optString("title"),
+                    artist = json.optString("artist"),
+                    thumbnailUrl = json.optString("thumbnailUrl", null),
+                )
+            } catch (_: Exception) {
+                null
+            }
+        }
+        set(value) {
+            if (value == null) {
+                prefs.edit().remove(KEY_PENDING_MEMBERSHIP_SONG).apply()
+            } else {
+                val json = JSONObject().apply {
+                    put("videoId", value.videoId)
+                    put("title", value.title)
+                    put("artist", value.artist)
+                    put("thumbnailUrl", value.thumbnailUrl)
+                }
+                prefs.edit().putString(KEY_PENDING_MEMBERSHIP_SONG, json.toString()).apply()
+            }
+        }
+
+    /** Revokes only the session, keeping a tapped song waiting for OAuth. */
+    fun clearMembershipSession() = prefs.edit()
+        .remove(KEY_MEMBERSHIP_SESSION)
+        .apply()
+
+    /** Revokes everything membership-related. Used by Settings sign-out. */
+    fun clearDiscordMembership() = prefs.edit()
+        .remove(KEY_MEMBERSHIP_SESSION)
+        .remove(KEY_PENDING_MEMBERSHIP_SONG)
+        .apply()
 
     /**
      * The WebDAV server password. Encrypted like every other credential here:
@@ -228,6 +339,8 @@ class AuthStore(context: Context) {
         private const val KEY_CHANNEL_NAME = "channel_name"
         private const val KEY_CHANNEL_AUTH_USER = "channel_auth_user"
         private const val KEY_DISCORD_TOKEN = "discord_token"
+        private const val KEY_MEMBERSHIP_SESSION = "discord_membership_session"
+        private const val KEY_PENDING_MEMBERSHIP_SONG = "pending_membership_song"
         private const val KEY_WEBDAV_PASSWORD = "webdav_password"
         private const val KEY_SMB_PASSWORD = "smb_password"
     }
