@@ -1,5 +1,6 @@
 package com.music.zenith
 
+import com.music.zenith.ui.components.Discord.MembershipDialog
 import com.music.zenith.auth.DiscordAuthClient
 import com.music.zenith.auth.DiscordAuthLink
 import android.Manifest
@@ -415,6 +416,29 @@ class MainActivity : AppCompatActivity() {
         setContent {
 
             val authContext = LocalContext.current
+            var showDiscordMembershipDialog by remember { mutableStateOf(false) }
+            var pendingMembershipPlayback by remember { mutableStateOf<(() -> Unit)?>(null) }
+
+            if (showDiscordMembershipDialog) {
+    DiscordMembershipDialog(
+        onJoin = {
+            authContext.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://discord.gg/uMgq6fgTqk")
+                )
+            )
+        },
+        onAuthorize = {
+            showDiscordMembershipDialog = false
+            DiscordAuthClient.start(authContext)
+        },
+        onCancel = {
+            showDiscordMembershipDialog = false
+            pendingMembershipPlayback = null
+        }
+    )
+}
 
             LaunchedEffect(Unit) {
                     DiscordAuthLink.callbacks.collect { callback ->

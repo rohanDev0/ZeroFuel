@@ -14,143 +14,146 @@ import java.security.SecureRandom
 
 object DiscordAuthClient {
 
-        private const val BASE_URL =
-                "https://zerofuel-discord-auth.rohantemp9.workers.dev"
+    private const val BASE_URL =
+        "https://zerofuel-discord-auth.rohantemp9.workers.dev"
 
-                    private const val PREFS = "zerofuel_discord_auth"
-                        private const val VERIFIER = "code_verifier"
-                            private const val STATE = "app_state"
+    private const val PREFS = "zerofuel_discord_auth"
+    private const val VERIFIER = "code_verifier"
+    private const val STATE = "app_state"
 
-                                private val random = SecureRandom()
+    private val random = SecureRandom()
 
-                                    private fun randomToken(): String {
-                                                val bytes = ByteArray(32)
-                                                        random.nextBytes(bytes)
+    private fun randomToken(): String {
+        val bytes = ByteArray(32)
+        random.nextBytes(bytes)
+        return Base64.encodeToString(
+            bytes,
+            Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
+        )
+    }
 
-                                                                return Base64.encodeToString(
-                                                                                bytes,
-                                                                                            Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
-                                                                )
-                                    }
+    private fun createChallenge(verifier: String): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+            .digest(verifier.toByteArray(Charsets.US_ASCII))
 
-                                        private fun createChallenge(verifier: String): String {
-                                                    val digest = MessageDigest.getInstance("SHA-256")
-                                                                .digest(verifier.toByteArray(Charsets.US_ASCII))
+        return Base64.encodeToString(
+            digest,
+            Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
+        )
+    }
 
-                                                                        return Base64.encodeToString(
-                                                                                        digest,
-                                                                                                    Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
-                                                                        )
-                                        }
+    fun start(context: Context) {
+        val verifier = randomToken()
+        val challenge = createChallenge(verifier)
+        val state = randomToken()
 
-                                            fun start(context: Context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putString(VERIFIER, verifier)
+            .putString(STATE, state)
+            .apply()
 
-                                                        val verifier = randomToken()
-                                                                val challenge = createChallenge(verifier)
-                                                                        val state = randomToken()
+        val authUrl = Uri.parse("$BASE_URL/auth/discord")
+            .buildUpon()
+            .appendQueryParameter("code_challenge", challenge)
+            .appendQueryParameter("app_state", state)
+            .build()
 
-                                                                                context.getSharedPreferences(
-                                                                                                PREFS,
-                                                                                                            Context.MODE_PRIVATE
-                                                                                ).edit()
-                                                                                            .putString(VERIFIER, verifier)
-                                                                                                        .putString(STATE, state)
-                                                                                                                    .apply()
+        context.startActivity(Intent(Intent.ACTION_VIEW, authUrl))
+    }
 
-                                                                                                                            val authUrl = Uri.parse("$BASE_URL/auth/discord")
-                                                                                                                                        .buildUpon()
-                                                                                                                                                    .appendQueryParameter("code_challenge", challenge)
-                                                                                                                                                                .appendQueryParameter("app_state", state)
-                                                                                                                                                                            .build()
+    suspend fun exchange(context: Context, callback: Uri): JSONObject =
+        withContext(Dispatchers.IO) {
 
-                                                                                                                                                                                    val intent = Intent(
-                                                                                                                                                                                                    Intent.ACTION_VIEW,
-                                                                                                                                                                                                                authUrl
-                                                                                                                                                                                    )
+            val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-                                                                                                                                                                                            context.startActivity(intent)
-                                            }
+            val verifier = prefs.getString(VERIFIER, null)
+                ?: throw Exception("Missing PKCE verifier")
 
-                                                suspend fun exchange(
-                                                            context: Context,
-                                                                    callback: Uri
-                                                ): JSONObject = withContext(Dispatchers.IO) {
+            val savedState = prefs.getString(STATE, null)
+                ?: throw Exception("Missing OAuth state")
 
-                                                            val prefs = context.getSharedPreferences(
-                                                                            PREFS,
-                                                                                        Context.MODE_PRIVATE
-                                                            )
+            val code = callback.getQueryParameter("code")
+                ?: throw Exception("Missing authorization code")
 
-                                                                    val verifier = prefs.getString(VERIFIER, null)
-                                                                                ?: throw Exception("Missing PKCE verifier")
+            val callbackState = callback.getQueryParameter("app_state")
+                ?: throw Exception("Missing callback state")
 
-                                                                                        val savedState = prefs.getString(STATE, null)
-                                                                                                    ?: throw Exception("Missing OAuth state")
+            if (callbackState != savedState) {
+                throw Exception("OAuth state mismatch")
+            }
 
-                                                                                                            val code = callback.getQueryParameter("code")
-                                                                                                                        ?: throw Exception("Missing authorization code")
+            val body = JSONObject().apply {
+                put("code", code)
+                put("appState", savedState)
+                put("codeVerifier", verifier)
+            }
 
-                                                                                                                                val callbackState = callback.getQueryParameter("app_state")
-                                                                                                                                            ?: throw Exception("Missing callback state")
+            val connection = URL("$BASE_URL/auth/exchange")
+                .openConnection() as HttpURLConnection
 
-                                                                                                                                                    if (callbackState != savedState) {
-                                                                                                                                                                    throw Exception("OAuth state mismatch")
-                                                                                                                                                    }
+            try {
+                connection.requestMethod = "POST"
+                connection.connectTimeout = 15000
+                connection.readTimeout = 15000
+                connection.doOutput = true
+                connection.setRequestProperty("Content-Type", "application/json")
 
-                                                                                                                                                            val body = JSONObject().apply {
-                                                                                                                                                                            put("code", code)
-                                                                                                                                                                                        put("appState", savedState)
-                                                                                                                                                                                                    put("codeVerifier", verifier)
-                                                                                                                                                            }
+                connection.outputStream.use {
+                    it.write(body.toString().toByteArray(Charsets.UTF_8))
+                }
 
-                                                                                                                                                                    val connection = URL(
-                                                                                                                                                                                    "$BASE_URL/auth/exchange"
-                                                                                                                                                                    ).openConnection() as HttpURLConnection
+                val responseCode = connection.responseCode
+                val stream = if (responseCode in 200..299) {
+                    connection.inputStream
+                } else {
+                    connection.errorStream
+                }
 
-                                                                                                                                                                            try {
-                                                                                                                                                                                            connection.requestMethod = "POST"
-                                                                                                                                                                                                        connection.connectTimeout = 15000
-                                                                                                                                                                                                                    connection.readTimeout = 15000
-                                                                                                                                                                                                                                connection.doOutput = true
+                val response = stream.bufferedReader().use { it.readText() }
 
-                                                                                                                                                                                                                                            connection.setRequestProperty(
-                                                                                                                                                                                                                                                                "Content-Type",
-                                                                                                                                                                                                                                                                                "application/json"
-                                                                                                                                                                                                                                            )
+                prefs.edit()
+                    .remove(VERIFIER)
+                    .remove(STATE)
+                    .apply()
 
-                                                                                                                                                                                                                                                        connection.outputStream.use {
-                                                                                                                                                                                                                                                                            it.write(body.toString().toByteArray(Charsets.UTF_8))
-                                                                                                                                                                                                                                                        }
+                if (responseCode !in 200..299) {
+                    throw Exception("Authentication failed: $response")
+                }
 
-                                                                                                                                                                                                                                                                    val responseCode = connection.responseCode
+                JSONObject(response)
+            } finally {
+                connection.disconnect()
+            }
+        }
 
-                                                                                                                                                                                                                                                                                val stream = if (responseCode in 200..299) {
-                                                                                                                                                                                                                                                                                                    connection.inputStream
-                                                                                                                                                                                                                                                                                } else {
-                                                                                                                                                                                                                                                                                                    connection.errorStream
-                                                                                                                                                                                                                                                                                }
+    suspend fun verifySession(token: String): Boolean =
+        withContext(Dispatchers.IO) {
 
-                                                                                                                                                                                                                                                                                            val response = stream.bufferedReader().use {
-                                                                                                                                                                                                                                                                                                                it.readText()
-                                                                                                                                                                                                                                                                                            }
+            val connection = URL("$BASE_URL/api/verify")
+                .openConnection() as HttpURLConnection
 
-                                                                                                                                                                                                                                                                                                        prefs.edit()
-                                                                                                                                                                                                                                                                                                                        .remove(VERIFIER)
-                                                                                                                                                                                                                                                                                                                                        .remove(STATE)
-                                                                                                                                                                                                                                                                                                                                                        .apply()
+            try {
+                connection.requestMethod = "GET"
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
+                connection.setRequestProperty(
+                    "Authorization",
+                    "Bearer $token"
+                )
 
-                                                                                                                                                                                                                                                                                                                                                                    if (responseCode !in 200..299) {
-                                                                                                                                                                                                                                                                                                                                                                                        throw Exception("Authentication failed: $response")
-                                                                                                                                                                                                                                                                                                                                                                    }
+                if (connection.responseCode !in 200..299) {
+                    return@withContext false
+                }
 
-                                                                                                                                                                                                                                                                                                                                                                                JSONObject(response)
+                val response = connection.inputStream.bufferedReader()
+                    .use { it.readText() }
 
-                                                                                                                                                                                                                                                                                                                                                                } finally {
-                                                                                                                                                                                                                                                                                                                                                                                connection.disconnect()
-                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                        
-                                                                                                                                                    
-                                                                
-                                    
+                JSONObject(response).optBoolean("authorized", false)
+            } catch (_: Exception) {
+                false
+            } finally {
+                connection.disconnect()
+            }
+        }
+}
