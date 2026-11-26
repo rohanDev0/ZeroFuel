@@ -650,8 +650,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        }
-    }
+    
 
     /**
      * The volume keys move the DAC's own volume while direct USB output owns
@@ -699,7 +698,7 @@ class MainActivity : AppCompatActivity() {
         MusicLink.consume(intent)
         DiscordAuthLink.consume(intent)
     }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
