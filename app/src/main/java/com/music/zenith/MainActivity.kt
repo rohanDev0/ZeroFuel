@@ -1,5 +1,11 @@
 package com.music.zenith
 
+import com.music.zenith.auth.DiscordAuthClient
+import com.music.zenith.auth.DiscordAuthLink
+import com.music.zenith.auth.MembershipGate
+import com.music.zenith.auth.toPendingMembershipSong
+import com.music.zenith.auth.toSong
+import com.music.zenith.ui.components.DiscordMembershipDialog
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -52,7 +58,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
@@ -409,7 +414,28 @@ class MainActivity : AppCompatActivity() {
         JamInviteLink.consume(intent)
         // Likewise for a link tapped or shared from another app — see [MusicLink].
         MusicLink.consume(intent)
+        DiscordAuthLink.consume(intent)
         setContent {
+
+            val authContext = LocalContext.current
+            val membershipState by MembershipGate.state.collectAsStateWithLifecycle()
+            var membershipDialogVisible by remember { mutableStateOf(false) }
+
+            LaunchedEffect(membershipState) {
+                if (membershipState is MembershipGate.State.Blocked) {
+                    membershipDialogVisible = true
+                } else if (membershipState is MembershipGate.State.Verified) {
+                    membershipDialogVisible = false
+                }
+            }
+
+            LaunchedEffect(authContext) {
+                MembershipGate.initialize(authContext)
+                MembershipGate.refresh(authContext)
+                DiscordAuthLink.callbacks.collect { callback ->
+                    MembershipGate.handleCallback(authContext, callback)
+                }
+            }
 
     var betaStatus by remember {
         mutableStateOf<BetaKillSwitch.Status?>(null)
@@ -569,6 +595,32 @@ class MainActivity : AppCompatActivity() {
                         appBackdrop = appBackdrop,
                     )
                 }
+
+                if (membershipDialogVisible && betaStatus?.enabled == true) {
+                    DiscordMembershipDialog(
+                        state = membershipState,
+                        onJoin = {
+                            authContext.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(BuildConfig.DISCORD_INVITE_URL)
+                                )
+                            )
+                        },
+                        onAuthorize = {
+                            try {
+                                DiscordAuthClient.start(authContext)
+                                MembershipGate.markChecking()
+                            } catch (_: Exception) {
+                                MembershipGate.block("auth_failed")
+                            }
+                        },
+                        onCancel = {
+                            membershipDialogVisible = false
+                            MembershipGate.cancel(authContext)
+                        },
+                    )
+                }
                 }
             }
         }
@@ -619,6 +671,7 @@ class MainActivity : AppCompatActivity() {
         PlayerDeepLink.consume(intent)
         JamInviteLink.consume(intent)
         MusicLink.consume(intent)
+        DiscordAuthLink.consume(intent)
     }
 }
 
@@ -1754,6 +1807,14 @@ private fun ZeroFuelApp(
         activeRadioSeed = null
         scope.launch {
             if (refusedByHost()) return@launch
+            if (!MembershipGate.ensureAuthorized(
+                    context,
+                    pending = {
+                        playFrom(allSongs, allIndex, source, boundedContext, continuationToken)
+                    },
+                    pendingSong = allSongs.getOrNull(allIndex)?.toPendingMembershipSong(),
+                )
+            ) return@launch
             val c = controller ?: return@launch
             val currentTimeline = player.queue.takeIf { it.size == c.mediaItemCount }
                 ?: (0 until c.mediaItemCount).map { c.getMediaItemAt(it).toSong() }
@@ -1861,11 +1922,17 @@ private fun ZeroFuelApp(
      * remixes of the same song. Album, artist and playlist pages keep [play],
      * where the surrounding list *is* the thing the user asked for.
      */
-    val playRadio: (Song, QueueSource) -> Unit = { song, source ->
+    fun playRadio(song: Song, source: QueueSource) {
         playRequestGeneration++
         activeRadioSeed = null
         scope.launch {
             if (refusedByHost()) return@launch
+            if (!MembershipGate.ensureAuthorized(
+                    context,
+                    pending = { playRadio(song, source) },
+                    pendingSong = song.toPendingMembershipSong(),
+                )
+            ) return@launch
             val c = controller ?: return@launch
             val currentTimeline = player.queue.takeIf { it.size == c.mediaItemCount }
                 ?: (0 until c.mediaItemCount).map { c.getMediaItemAt(it).toSong() }
@@ -1881,6 +1948,19 @@ private fun ZeroFuelApp(
         }
     }
 
+    // If the activity was killed during OAuth there is no captured lambda to
+    // resume, only the song identity saved before the browser opened.
+    val pendingMembershipSong by MembershipGate.pendingSong
+        .collectAsStateWithLifecycle(initialValue = null)
+    LaunchedEffect(pendingMembershipSong) {
+        val pending = pendingMembershipSong ?: return@LaunchedEffect
+        MembershipGate.consumePendingSong(context)
+        playRadio(
+            pending.toSong(),
+            QueueSource(pending.title, PlaybackSourceType.QUEUE, pending.videoId),
+        )
+    }
+
     /**
      * Starts the explicit station offered by every song overflow menu.
      *
@@ -1889,7 +1969,7 @@ private fun ZeroFuelApp(
      * destroy the queue already playing. Once ready, the whole old queue is
      * replaced in one Media3 operation.
      */
-    val startRadio: (Song) -> Unit = { song ->
+    fun startRadio(song: Song) {
         val originalController = controller
         if (originalController != null && !refusedByHost()) {
             val request = ++playRequestGeneration
@@ -1901,6 +1981,12 @@ private fun ZeroFuelApp(
                 .filterNot { it.fromAutoplay }
                 .map { it.mediaId }
             scope.launch {
+                if (!MembershipGate.ensureAuthorized(
+                        context,
+                        pending = { startRadio(song) },
+                        pendingSong = song.toPendingMembershipSong(),
+                    )
+                ) return@launch
                 val seed = song.copy(
                     radioName = song.title,
                     playbackSource = song.title,

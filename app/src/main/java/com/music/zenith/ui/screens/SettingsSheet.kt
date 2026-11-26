@@ -163,6 +163,7 @@ import com.music.zenith.data.LocalMediaRepository
 import com.music.zenith.data.NerdStats
 import com.music.zenith.data.scrobbling.LastFM
 import com.music.zenith.data.listentogether.ListenTogether
+import com.music.zenith.auth.MembershipGate
 import com.music.zenith.data.settings.AppSettings
 import com.music.zenith.data.settings.OutputPcmMode
 import com.music.zenith.data.settings.GlassClarity
@@ -245,6 +246,8 @@ fun SettingsScreen(
     onCustomizeHome: () -> Unit = {},
 ) {
     val context = LocalContext.current
+    val membershipScope = rememberCoroutineScope()
+    val membershipState by MembershipGate.state.collectAsStateWithLifecycle()
 
     val wifiQuality by AppSettings.audioQualityWifi.collectAsStateWithLifecycle()
     val cellularQuality by AppSettings.audioQualityCellular.collectAsStateWithLifecycle()
@@ -581,6 +584,41 @@ fun SettingsScreen(
                         subtitle = account?.email?.takeIf { it.isNotBlank() }
                             ?: stringResource(if (signedIn) R.string.signed_in else R.string.not_signed_in),
                         onClick = onAccountScrobbling,
+                    )
+                }
+                val membershipTitle = stringResource(R.string.membership_settings_title)
+                row(membershipTitle, "discord", "members", "gateway") {
+                    SettingsRow(
+                        icon = SfIcons.Lock,
+                        title = membershipTitle,
+                        subtitle = when (val state = membershipState) {
+                            is MembershipGate.State.Verified -> stringResource(
+                                R.string.membership_status_verified,
+                                state.username.ifBlank { stringResource(R.string.discord) },
+                            )
+                            is MembershipGate.State.Blocked -> when (state.reason) {
+                                "not_a_member" -> stringResource(R.string.membership_status_not_member)
+                                "verification_unavailable" -> stringResource(R.string.membership_status_unavailable)
+                                "auth_failed" -> stringResource(R.string.membership_status_auth_failed)
+                                else -> stringResource(R.string.membership_status_not_authorized)
+                            }
+                            MembershipGate.State.Checking -> stringResource(R.string.membership_status_checking)
+                            MembershipGate.State.Unknown -> stringResource(R.string.membership_status_unknown)
+                        },
+                        onClick = {
+                            membershipScope.launch {
+                                MembershipGate.ensureAuthorized(context)
+                            }
+                        },
+                    )
+                }
+                val membershipSignOut = stringResource(R.string.membership_sign_out)
+                row(membershipSignOut, "discord", "sign out", "revoke") {
+                    SettingsRow(
+                        icon = SfIcons.Login,
+                        title = membershipSignOut,
+                        subtitle = stringResource(R.string.membership_sign_out_subtitle),
+                        onClick = { MembershipGate.signOut(context) },
                     )
                 }
                 // Sits with the account rather than with Playback: a party is up to
@@ -2090,7 +2128,7 @@ fun SettingsScreen(
                     )
                 }
                 Text(
-                    text = "Transformed by Rohn",
+                    text = "Transformed by Rohn & castle",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 1.dp),
