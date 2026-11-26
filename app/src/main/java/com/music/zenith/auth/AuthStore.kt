@@ -50,13 +50,19 @@ class AuthStore(context: Context) {
         // anything useful.
         val legacy = context.getSharedPreferences("zerofuel_membership", Context.MODE_PRIVATE)
         val legacyToken = legacy.getString("session_token", null)
-        if (!legacyToken.isNullOrBlank() && membershipSession == null) {
-            membershipSession = MembershipSession(
-                token = legacyToken,
-                username = legacy.getString("username", null).orEmpty(),
-                verifiedAt = 0L,
-                expiresAt = 0L,
-            )
+        if (
+            !legacyToken.isNullOrBlank() &&
+            prefs.getString(KEY_MEMBERSHIP_SESSION, null) == null
+        ) {
+            prefs.edit().putString(
+                KEY_MEMBERSHIP_SESSION,
+                JSONObject().apply {
+                    put("token", legacyToken)
+                    put("username", legacy.getString("username", null).orEmpty())
+                    put("verifiedAt", 0L)
+                    put("expiresAt", 0L)
+                }.toString(),
+            ).apply()
         }
         legacy.edit().clear().apply()
     }
