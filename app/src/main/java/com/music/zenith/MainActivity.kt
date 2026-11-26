@@ -1922,7 +1922,7 @@ private fun ZeroFuelApp(
      * remixes of the same song. Album, artist and playlist pages keep [play],
      * where the surrounding list *is* the thing the user asked for.
      */
-    val playRadio: (Song, QueueSource) -> Unit = { song, source ->
+    fun playRadio(song: Song, source: QueueSource) {
         playRequestGeneration++
         activeRadioSeed = null
         scope.launch {
@@ -1969,7 +1969,7 @@ private fun ZeroFuelApp(
      * destroy the queue already playing. Once ready, the whole old queue is
      * replaced in one Media3 operation.
      */
-    val startRadio: (Song) -> Unit = { song ->
+    fun startRadio(song: Song) {
         val originalController = controller
         if (originalController != null && !refusedByHost()) {
             val request = ++playRequestGeneration
