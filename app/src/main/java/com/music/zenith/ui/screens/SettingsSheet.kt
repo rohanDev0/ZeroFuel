@@ -2128,7 +2128,7 @@ fun SettingsScreen(
                     )
                 }
                 Text(
-                    text = "Transformed by Rohn",
+                    text = "Transformed by Rohn & castle",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 1.dp),

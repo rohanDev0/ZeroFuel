@@ -867,7 +867,7 @@ object AppSettings {
      * Partikel berkilau di sekitar huruf yang ditahan pada efek LiquidFlow.
      * Hanya berlaku saat [liquidFlow] nyala.
      */
-    val lyricsSparkle = MutableStateFlow(true)
+    val lyricsSparkle = MutableStateFlow(false)
 
     /**
      * Positive values delay synced lyrics; negative values bring them forward.
@@ -1375,7 +1375,7 @@ object AppSettings {
             .putString(KEY_AUTOMIX_PERFORMANCE_MODE, if (capable) "PERFORMANCE" else "BALANCED")
             .putBoolean(KEY_SKIP_SILENCE, true)
             .putString(KEY_OUTPUT_PCM_MODE, if (floatOk) "FLOAT_32" else "PCM_16")
-            .putBoolean(KEY_DIRECT_SOURCE_STREAM, true)
+            .putBoolean(KEY_DIRECT_SOURCE_STREAM, false)
             .putBoolean(KEY_SPATIAL_AUDIO, false)
             .putString(KEY_QUALITY_CELLULAR, "HIGH")
             .putBoolean(KEY_WIFI_ONLY_DOWNLOADS, false)
@@ -1386,7 +1386,7 @@ object AppSettings {
             .putBoolean(KEY_SHOW_QUEUE_HISTORY, true)
             .putBoolean(KEY_SWIPE_TO_PLAY_NEXT, true)
             .putBoolean(KEY_DONT_REPEAT_SUGGESTIONS, true)
-            .putBoolean(KEY_LIQUID_GLASS, Build.VERSION.SDK_INT >= 31 && !lowRam)
+            .putBoolean(KEY_LIQUID_GLASS, false)
             .putBoolean(KEY_FULL_BLEED_ARTWORK, true)
             .putBoolean(KEY_PRIORITIZE_SYLLABLE_SYNC, true)
             .putBoolean(KEY_SHOW_CACHE_FOLDER, true)
@@ -1417,7 +1417,7 @@ object AppSettings {
             .putBoolean(KEY_LEGACY_MESH_GRADIENT, false)
             .putBoolean(KEY_LYRICS_BLUR, !lowRam)
             .putBoolean(KEY_LIQUID_FLOW, !lowRam)
-            .putBoolean(KEY_LYRICS_SPARKLE, !lowRam)
+            .putBoolean(KEY_LYRICS_SPARKLE, false)
             .putBoolean(KEY_ANIMATED_CANVAS, !lowRam)
             .apply()
     }
@@ -1575,7 +1575,7 @@ object AppSettings {
         progressiveBlur.value = prefs.getBoolean(KEY_PROGRESSIVE_BLUR, false)
         lyricsBlur.value = prefs.getBoolean(KEY_LYRICS_BLUR, true)
         liquidFlow.value = prefs.getBoolean(KEY_LIQUID_FLOW, true)
-        lyricsSparkle.value = prefs.getBoolean(KEY_LYRICS_SPARKLE, true)
+        lyricsSparkle.value = prefs.getBoolean(KEY_LYRICS_SPARKLE, false)
         lyricsOffsetByTrack = readLyricsOffsetByTrack()
         translationLanguage.value = prefs.getString(KEY_TRANSLATION_LANGUAGE, "").orEmpty()
         if (highPerformanceMode.value) {
